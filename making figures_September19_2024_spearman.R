@@ -10,6 +10,7 @@ library(dplyr)
 library(readxl)
 
 # click on the file to import
+
 #file name interpret: missing 5 kcal/kg values added, 3 (eye balled) outliers removed.
 #not reasonable to eyeball outliers, need scientific justification.
 
@@ -1182,6 +1183,7 @@ plot
 
 
 #============================== new idea to swap shape and color in the 3D PCA=========== 9-25-2024
+#this is the updated version I have made into a figure on 9-25-24
 
 # Load required libraries
 library(readxl)
