@@ -481,18 +481,21 @@ dev.off()
 
 ##================================================================================================
 #summary statistics
+library(tidyverse)
 # Calculate summary statistics for each measure by type
 summary_stats <- data_3or %>%
   select(Type, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food, CML_ug_per_kcal_food, 
          MG_ug_per_kcal_food, LF_ug_per_kcal_food, SF_ug_per_kcal_food, CML_plus_MG_g, CML_plus_MG_kcal, 
          Combined_fluo_g, Combined_fluo_kcal, Total_AGE_Score_g, Total_AGE_Score_kcal) %>%
   group_by(Type) %>%
-  summarise(across(everything(), list(mean = ~mean(., na.rm = TRUE), 
+  summarise(across(everything(), list(min = ~min(., na.rm = TRUE),
+                                      max = ~max(., na.rm = TRUE),
+                                      mean = ~mean(., na.rm = TRUE), 
                                       median = ~median(., na.rm = TRUE), 
                                       sd = ~sd(., na.rm = TRUE))))
 
 # Save the summary statistics as a CSV file
-write.csv(summary_stats, 'summary_statistics_by_type.csv', row.names = FALSE)
+write.csv(summary_stats, 'summary_statistics_by_type10-21-24.csv', row.names = FALSE)
 View(summary_stats)
 
 ###======================FIGURE 5 ===================================================================
