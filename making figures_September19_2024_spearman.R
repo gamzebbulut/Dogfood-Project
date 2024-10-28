@@ -92,6 +92,12 @@ canned_mg <- data_3or %>%
   dplyr::select(MG_ug_per_kcal_food)
 View (canned_mg)
 
+#can we make a table of lowest canned eMGs: 10-28-24
+canned_mg_list <- data_3or %>%
+  filter(Type== "Canned") %>%
+  select(ID,Make, Description,Type , MG_ug_per_g_food)
+View (canned_mg_list)
+
 # 4a extract data for prism MG kibble
 kibble_mg <- data_3or %>%
   filter(Type== "Kibble") %>%
