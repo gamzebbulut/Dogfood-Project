@@ -15,149 +15,88 @@ library(readxl)
 ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization <- read_excel("attempt 9/ELISA and fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF edits_moisture normalization.xlsx")
 View(ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization)
 
-#file name interpret: missing 5 kcal/kg values added, 3 (eye balled) outliers removed.
-#not reasonable to eyeball outliers, need scientific justification.
 
-
-# I have to work with 2 files in this code
-# data_3NA_forCML is the one where 3 high CML values are NA ed
-# data_3or is the one where the entire 3 rows are deleted.
-
-data_3or <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3_super_high_cml_removed
-data_3NA_forCML <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed
 data_moisture <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization
 
-str(data_3or)
-View(data_3or)
 str(data_moisture)
-
-data_3or <- data_3or %>%
-  mutate(label = as.character(ID))
-
-data_3NA_forCML<- data_3NA_forCML %>%
-  mutate(label = as.character(ID))
 
 data_moisture<- data_moisture %>%
   mutate(label = as.character(ID))
 
 # need some modification here: coerce the data type to be numeric.
-data_3or <- data_3or %>%
-  mutate(CML_ug_per_g_food = as.numeric(CML_ug_per_g_food))
-
-# need some modification here: coerce the data type to be numeric.
-data_3NA_forCML <- data_3NA_forCML %>%
-  mutate(CML_ug_per_g_food = as.numeric(CML_ug_per_g_food))
-
-# need some modification here: coerce the data type to be numeric.
 data_moisture <- data_moisture %>%
   mutate(CML_ug_per_g_food = as.numeric(CML_ug_per_g_food))
-
-
-# need some modification here: coerce the data type to be numeric.
-data_3NA_forCML <- data_3NA_forCML %>%
-  mutate(`kcal/kg` = as.numeric(`kcal/kg`)) %>%
-  rename(kcal_per_kg = `kcal/kg`)
-
-# need some modification here: coerce the data type to be numeric.
-data_3or <- data_3or %>%
-  mutate(`kcal/kg` = as.numeric(`kcal/kg`)) %>%
-  rename(kcal_per_kg = `kcal/kg`)
 
 # need some modification here: coerce the data type to be numeric.
 data_moisture <- data_moisture %>%
   mutate(`kcal/kg` = as.numeric(`kcal/kg`)) %>%
   rename(kcal_per_kg = `kcal/kg`)
 
-#bring in my whole chunk of mutate bundle
-
-data_3NA_forCML <- data_3NA_forCML %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
-  mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-  mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
-  mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
-  mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
+data_moisture <- data_moisture %>%
+  mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
+  mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist)
 
 
-data_3or <- data_3or %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
-  mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-  mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
-  mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
-  mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
-
-
-View(data_3NA_forCML)
-View(data_3or)
 View(data_moisture)
 
-colnames(data_3or)
-
 # 1a extract data for prism CML canned
-canned <- data_3or %>%
+canned <- data_moisture %>%
   filter(Type == "Canned") %>%
-  dplyr::select(CML_ug_per_kcal_food)
+  dplyr::select(CML_ug_per_kcal_food_moist)
 View (canned)
 
 # 2a extract data for prism CML kibble
-kibble <- data_3or %>%
+kibble <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(CML_ug_per_kcal_food)
+  dplyr::select(CML_ug_per_kcal_food_moist)
 View (kibble)
 
 # 3a extract data for prism MG canned
-canned_mg <- data_3or %>%
+canned_mg <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(MG_ug_per_kcal_food)
+  dplyr::select(MG_ug_per_kcal_food_moist)
 View (canned_mg)
 
-#can we make a table of lowest canned eMGs: 10-28-24
-canned_mg_list <- data_3or %>%
-  filter(Type== "Canned") %>%
-  select(ID,Make, Description,Type , MG_ug_per_g_food)
-View (canned_mg_list)
-
 # 4a extract data for prism MG kibble
-kibble_mg <- data_3or %>%
+kibble_mg <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(MG_ug_per_kcal_food)
+  dplyr::select(MG_ug_per_kcal_food_moist)
 View (kibble_mg)
 
 # 5a extract data for prism CML plus MG canned (this is the kcal version)
-canned_cml_plus_mg <- data_3or %>%
+canned_cml_plus_mg <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(CML_plus_MG_kcal)
+  dplyr::select(CML_plus_MG_kcal_moist)
 View (canned_cml_plus_mg)
 
 # 6a extract data for prism CML plus MG kibble 
-kibble_cml_plus_mg <- data_3or %>%
+kibble_cml_plus_mg <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(CML_plus_MG_kcal)
+  dplyr::select(CML_plus_MG_kcal_moist)
 View (kibble_cml_plus_mg)
 
 # 7a extract data for prism SF canned
-canned_sf <- data_3or %>%
+canned_sf <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(SF_ug_per_kcal_food)
+  dplyr::select(SF_ug_per_kcal_food_moist)
 View (canned_sf)
 
 # 8a extract data for prism SF kibble
-kibble_sf <- data_3or %>%
+kibble_sf <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(SF_ug_per_kcal_food)
+  dplyr::select(SF_ug_per_kcal_food_moist)
 View (kibble_sf)
 
 # 9a extract data for prism LF canned
-canned_lf <- data_3or %>%
+canned_lf <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(LF_ug_per_kcal_food)
+  dplyr::select(LF_ug_per_kcal_food_moist)
 View (canned_lf)
 
 # 10a extract data for prism LF kibble
-kibble_lf <- data_3or %>%
+kibble_lf <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(LF_ug_per_kcal_food)
+  dplyr::select(LF_ug_per_kcal_food_moist)
 View (kibble_lf)
 
 #Now start making same plots for ug per gram food
@@ -165,88 +104,64 @@ View (kibble_lf)
 #add a new column that calculates CML+ MG using ug per gram food
 
 # 1 extract data for prism CML canned in ug per gram
-canned <- data_3or %>%
+canned <- data_moisture %>%
   filter(Type == "Canned") %>%
-  dplyr::select(CML_ug_per_g_food)
+  dplyr::select(CML_ug_per_g_food_moist)
 View (canned)
 
 # 2 extract data for prism CML kibble
-kibble <- data_3or %>%
+kibble <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(CML_ug_per_g_food)
+  dplyr::select(CML_ug_per_g_food_moist)
 View (kibble)
 
 # 3 extract data for prism MG canned
-canned_mg <- data_3or %>%
+canned_mg <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(MG_ug_per_g_food)
+  dplyr::select(MG_ug_per_g_food_moist)
 View (canned_mg)
 
 # 4 extract data for prism MG kibble
-kibble_mg <- data_3or %>%
+kibble_mg <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(MG_ug_per_g_food)
+  dplyr::select(MG_ug_per_g_food_moist)
 View (kibble_mg)
 
 # 5 extract data for prism CML plus MG canned (this is the ug per g version)
-canned_cml_plus_mg <- data_3or %>%
+canned_cml_plus_mg <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(CML_plus_MG_g)
+  dplyr::select(CML_plus_MG_g_moist)
 View (canned_cml_plus_mg)
 
 # 6 extract data for prism CML plus MG kibble 
-kibble_cml_plus_mg <- data_3or %>%
+kibble_cml_plus_mg <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(CML_plus_MG_g)
+  dplyr::select(CML_plus_MG_g_moist)
 View (kibble_cml_plus_mg)
 
 # 7 extract data for prism SF canned
-canned_sf <- data_3or %>%
+canned_sf <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(SF_ug_per_g_food)
+  dplyr::select(SF_ug_per_g_food_moist)
 View (canned_sf)
 
 # 8 extract data for prism SF kibble
-kibble_sf <- data_3or %>%
+kibble_sf <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(SF_ug_per_g_food)
+  dplyr::select(SF_ug_per_g_food_moist)
 View (kibble_sf)
 
 # 9 extract data for prism LF canned
-canned_lf <- data_3or %>%
+canned_lf <- data_moisture %>%
   filter(Type== "Canned") %>%
-  dplyr::select(LF_AGE_ug_per_g_food)
+  dplyr::select(LF_AGE_ug_per_g_food_moist)
 View (canned_lf)
 
 # 10 extract data for prism LF kibble
-kibble_lf <- data_3or %>%
+kibble_lf <- data_moisture %>%
   filter(Type== "Kibble") %>%
-  dplyr::select(LF_AGE_ug_per_g_food)
+  dplyr::select(LF_AGE_ug_per_g_food_moist)
 View (kibble_lf)
-
-# 11 extract data for prism total age score canned
-canned_total <- data_3or %>%
-  filter(Type== "Canned") %>%
-  dplyr::select(Total_AGE_Score_g)
-View (canned_total)
-
-# 12 extract data for prism total kibble
-kibble_total <- data_3or %>%
-  filter(Type== "Kibble") %>%
-  dplyr::select(Total_AGE_Score_g)
-View (kibble_total)
-
-# 13 extract data for prism total age score canned kcal
-canned_total <- data_3or %>%
-  filter(Type== "Canned") %>%
-  dplyr::select(Total_AGE_Score_kcal)
-View (canned_total)
-
-# 14 extract data for prism total kibble kcal
-kibble_total <- data_3or %>%
-  filter(Type== "Kibble") %>%
-  dplyr::select(Total_AGE_Score_kcal)
-View (kibble_total)
 
 #now re make all the plots for Fig 3, make R remember the function.
 
@@ -349,6 +264,8 @@ scatter_plot_by_type_label_left <- function(data, x, y, z = NULL) {
 
 
 #make a new scatter plot to see AGE measure vs ingredients to find which ones are p value signif
+
+#stop here on oct 31st 2024========================================================================
 
 # here we no longer need to use the kcal normalization
 #also now we switch to using the data_3NA_forCML file which has the 3 high CML values only NAed 
