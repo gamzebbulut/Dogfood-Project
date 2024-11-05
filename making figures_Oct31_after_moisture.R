@@ -25,7 +25,7 @@ data_moisture<- data_moisture %>%
 
 # need some modification here: coerce the data type to be numeric.
 data_moisture <- data_moisture %>%
-  mutate(CML_ug_per_g_food = as.numeric(CML_ug_per_g_food))
+  mutate(CML_ug_per_g_food_moist = as.numeric(CML_ug_per_g_food_moist))
 
 # need some modification here: coerce the data type to be numeric.
 data_moisture <- data_moisture %>%
@@ -34,7 +34,7 @@ data_moisture <- data_moisture %>%
 
 data_moisture <- data_moisture %>%
   mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
-  mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist)
+  mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) 
 
 
 View(data_moisture)
@@ -100,7 +100,7 @@ kibble_lf <- data_moisture %>%
 View (kibble_lf)
 
 #Now start making same plots for ug per gram food
-### Part 2 of fig 2==============================
+#==============================
 #add a new column that calculates CML+ MG using ug per gram food
 
 # 1 extract data for prism CML canned in ug per gram
@@ -265,170 +265,88 @@ scatter_plot_by_type_label_left <- function(data, x, y, z = NULL) {
 
 #make a new scatter plot to see AGE measure vs ingredients to find which ones are p value signif
 
-#stop here on oct 31st 2024========================================================================
+#continue here on Nov 5th 2024========================================================================
 
-# here we no longer need to use the kcal normalization
-#also now we switch to using the data_3NA_forCML file which has the 3 high CML values only NAed 
-# while keeping other AGE measures of the same dogfoods available.
+# here we will use moisture data set
 # CML
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "CML_ug_per_g_food","Canned") #0.064
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"CML_ug_per_g_food", "Canned") # 0.39
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_Crude_fiber" ,"CML_ug_per_g_food", "Canned") #0.44
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"CML_ug_per_g_food", "Canned") #0.517
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_ug_per_g_food_moist","Canned") #0.198 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_ug_per_g_food_moist", "Canned") # 0.253 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_ug_per_g_food_moist", "Canned") #0.654 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_ug_per_g_food_moist", "Canned") #0.717 moist
 
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "CML_ug_per_g_food","Kibble")  #0.498
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"CML_ug_per_g_food", "Kibble")  #0.524
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_Crude_fiber" ,"CML_ug_per_g_food", "Kibble")  #0.854
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"CML_ug_per_g_food", "Kibble") #signif #0.00303
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_ug_per_g_food_moist","Kibble")  #0.493 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_ug_per_g_food_moist", "Kibble")  #0.437 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_ug_per_g_food_moist", "Kibble")  #0.91 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_ug_per_g_food_moist", "Kibble") #signif #0.00694 moist
 
 #MG
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "MG_ug_per_g_food","Canned") #0.0661
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"MG_ug_per_g_food", "Canned") # very signif ******
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"MG_ug_per_g_food", "Canned") # 0.000843*********
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"MG_ug_per_g_food", "Canned") # 0.0435 *********
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "MG_ug_per_g_food_moist","Canned") #0.422 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"MG_ug_per_g_food_moist", "Canned") # signif 0.00018 moist******
+scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"MG_ug_per_g_food_moist", "Canned") # 0.0014 moist****
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"MG_ug_per_g_food_moist", "Canned") # 0.0451 moist ****
 
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "MG_ug_per_g_food","Kibble")  #Not signif 0.558
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"MG_ug_per_g_food", "Kibble")  #Not signif 0.494
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_Crude_fiber" ,"MG_ug_per_g_food", "Kibble")  #Not signif 0.886
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"MG_ug_per_g_food", "Kibble")  #Not signif 0.737
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "MG_ug_per_g_food_moist","Kibble")  #Not signif 0.717 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.517 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.839 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.942 moist
 
-#CML plus MG
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "CML_plus_MG_g","Canned")  # signif 0.0484
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"CML_plus_MG_g", "Canned") # not signif 0.414
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"CML_plus_MG_g", "Canned")  ## ** 0.0325
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"CML_plus_MG_g", "Canned") ## 0.15 not signif
+#CML plus MG=== 
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_plus_MG_g_moist","Canned")  # not signif 0.291 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_plus_MG_g_moist", "Canned") # not signif 0.578 moist
+scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"CML_plus_MG_g_moist", "Canned")  ## not signif 0.0597 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_plus_MG_g_moist", "Canned") ## 0.318 not signif moist
 
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "CML_plus_MG_g","Kibble")  #Not signif 0.378
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"CML_plus_MG_g", "Kibble")  #Not signif 0.289
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_Crude_fiber" ,"CML_plus_MG_g", "Kibble") #Not signif 0.798
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"CML_plus_MG_g", "Kibble") # signif 0.0433
-
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_plus_MG_g_moist","Kibble")  #Not signif 0.441 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_plus_MG_g_moist", "Kibble")  #Not signif 0.332 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_plus_MG_g_moist", "Kibble") #Not signif 0.512 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_plus_MG_g_moist", "Kibble") # not signif 0.122 moist
 
 #SF
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "SF_ug_per_g_food","Canned")  ## 0.0517
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"SF_ug_per_g_food", "Canned") #Not signif 0.143
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_Crude_fiber" ,"SF_ug_per_g_food", "Canned") #Not signif 0.232
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"SF_ug_per_g_food", "Canned") #Not signif 0.315
-scatter_plot_by_type_label_left(data_3NA_forCML,"kcal_per_kg" ,"SF_ug_per_g_food", "Canned") # signif 0.0125
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "SF_ug_per_g_food_moist","Canned")  ## 0.571 not sig moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"SF_ug_per_g_food_moist", "Canned") #Not signif 0.991 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"SF_ug_per_g_food_moist", "Canned") #Not signif 0.438 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"SF_ug_per_g_food_moist", "Canned") #signif 0.0196 moist
 
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "SF_ug_per_g_food","Kibble") #Not signif 0.531
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"SF_ug_per_g_food", "Kibble")  #Not signif 0.153
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"SF_ug_per_g_food", "Kibble") #Not signif 0.656
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"SF_ug_per_g_food", "Kibble") #Not signif 0.832
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "SF_ug_per_g_food_moist","Kibble") #Not signif 0.743 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"SF_ug_per_g_food_moist", "Kibble")  #Not signif 0.154 m
+scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"SF_ug_per_g_food_moist", "Kibble") #Not signif 0.72 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"SF_ug_per_g_food_moist", "Kibble") #Not signif 0.789 m
 
 #LF plots
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food","Canned")   # ********* 0.00436
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"LF_AGE_ug_per_g_food", "Canned")  # ********* 0.000131
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food", "Canned") # ********* 0.00247
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"LF_AGE_ug_per_g_food", "Canned")  # ********* 0.00132
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food_moist","Canned")   # 0.33 not signif m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"LF_AGE_ug_per_g_food_moist", "Canned")  # ** 0.000166 m
+scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food_moist", "Canned") # ** 0.0197 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"LF_AGE_ug_per_g_food_moist", "Canned")  # ** 0.00485 m
 
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food","Kibble") # not signif 0.47
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"LF_AGE_ug_per_g_food", "Kibble") # signif 0.0305
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food", "Kibble") #not signif 0.716
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_moisture" ,"LF_AGE_ug_per_g_food", "Kibble") # not signif 0.0805
-
-
-
-
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"Combined_fluo_g", "Canned") # not signif 0.0738
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "Combined_fluo_g","Canned") # **** 0.000601
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"Combined_fluo_g", "Canned") # ***** 0.0011
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"Combined_fluo_g", "Canned") # ***** 0.0057
-
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"Combined_fluo_g", "Kibble") # not signif 0.173
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "Combined_fluo_g","Kibble") #not signif 0.0366
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"Combined_fluo_g", "Kibble") # signif 0.0153
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"Combined_fluo_g", "Kibble") #not signif 0.779
-
-#total AGE score
-
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"Total_AGE_Score_g", "Canned") # not signif 0.0511
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "Total_AGE_Score_g","Canned") # **** 0.00134
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"Total_AGE_Score_g", "Canned") # ***** 0.00274
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"Total_AGE_Score_g", "Canned") # ***** 0.00383
-
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_moisture" ,"Total_AGE_Score_g", "Kibble") # not signif 0.115
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_fat", "Total_AGE_Score_g","Kibble") #not signif 0.362
-scatter_plot_by_type_label_left(data_3NA_forCML,"Percent_max_Crude_protein" ,"Total_AGE_Score_g", "Kibble") # signif 0.0228
-scatter_plot_by_type_label_right(data_3NA_forCML,"Percent_Crude_fiber" ,"Total_AGE_Score_g", "Kibble") #not signif 0.545
-
-
-#Figure 2 related plots
-scatter_plot_by_type_label_left(data_3or,"CML_ug_per_g_food", "MG_ug_per_g_food","Canned") #0.146
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "MG_ug_per_g_food","Kibble") # 0.0288
-
-#responding to Vick's question about should we remove 3 CML high values
-#these could include the fresh
-
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "MG_ug_per_g_food")
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "LF_AGE_ug_per_g_food")
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "SF_ug_per_g_food")
-
-#just check how it looks when Fresh is excluded
-data_3or_no_Fresh <- data_3or %>%
-  filter (data_3or$Type != "Fresh")
-
-scatter_plot_by_type_label_right(data_3or_no_Fresh,"CML_ug_per_g_food", "MG_ug_per_g_food")
-scatter_plot_by_type_label_right(data_3or_no_Fresh,"CML_ug_per_g_food", "LF_AGE_ug_per_g_food")
-scatter_plot_by_type_label_right(data_3or_no_Fresh,"CML_ug_per_g_food", "SF_ug_per_g_food")
-
-
-#Figure 2 bottom plots, (made a different colored version below but this is preferred)
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "MG_ug_per_g_food","Canned") #not signif 0.146
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "MG_ug_per_g_food","Kibble") #signif 0.0288
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "SF_ug_per_g_food","Canned") # 0.000204
-scatter_plot_by_type_label_right(data_3or,"CML_ug_per_g_food", "SF_ug_per_g_food","Kibble") #not signif 0.876
-scatter_plot_by_type_label_left(data_3or,"CML_plus_MG_g", "SF_ug_per_g_food","Canned") # very signif
-scatter_plot_by_type_label_right(data_3or,"CML_plus_MG_g", "SF_ug_per_g_food","Kibble") #0.00965
-
-scatter_plot_by_type_label_left(data_3or,"MG_ug_per_g_food", "SF_ug_per_g_food","Canned") # 0.000122
-scatter_plot_by_type_label_right(data_3or,"MG_ug_per_g_food", "SF_ug_per_g_food","Kibble") # 0.00109
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food_moist","Kibble") # not signif 0.605 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"LF_AGE_ug_per_g_food_moist", "Kibble") # yes signif 0.0206 m
+scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food_moist", "Kibble") #not signif 0.784 m
+scatter_plot_by_type_label_right(data_moisture,"Percent_moisture" ,"LF_AGE_ug_per_g_food_moist", "Kibble") # not signif 0.0833 m
 
 
 
+#Figure 2 related plots among AGE measures correlations.
 
-#to label points if needed.
-#c + geom_text(aes(label = label), nudge_x = 0.3, nudge_y = 0.3, check_overlap = FALSE) 
-#k + geom_text(aes(label = label), nudge_x = 0.3, nudge_y = 0.3, check_overlap = FALSE)
+scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Canned") # sign 0.00329 m
+scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Kibble") #not signif 0.653 m
 
-#ask chat GPT what other analysis I can do======================================
+scatter_plot_by_type_label_left(data_moisture,"MG_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Canned") # 0.126 not signif m
+scatter_plot_by_type_label_right(data_moisture,"MG_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Kibble") # 0.00018 sign m
 
-library(ggplot2)
-library(dplyr)
-library(tidyr)
+scatter_plot_by_type_label_left(data_moisture,"CML_plus_MG_g_moist", "SF_ug_per_g_food_moist","Canned") # 0.00436 m
+scatter_plot_by_type_label_right(data_moisture,"CML_plus_MG_g_moist", "SF_ug_per_g_food_moist","Kibble") # 0.004 sign m
 
-# Exclude the dog foods with the type "fresh"
-data_3or <- data_3or %>%
-  filter(Type != "Fresh")
+scatter_plot_by_type_label_left(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Canned") #0.353
+scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Kibble") # signif 0.0233 m
 
-# Convert to long format for plotting
-long_data <- data_3or %>%
-  select(Type, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food) %>%
-  gather(key = "Measure", value = "Value", CML_ug_per_g_food:SF_ug_per_g_food)
-
-# Create the box plot
-p <- ggplot(long_data, aes(x = Type, y = Value, fill = Type)) +
-  geom_boxplot() +
-  facet_wrap(~ Measure, scales = "free_y") +
-  labs(title = "Distribution of AGE Measures by Dog Food Type",
-       x = "Dog Food Type",
-       y = "Value") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-p
-
-# Save the plot as a PNG file
-png(filename = "boxplot_AGE_measures_by_type.png", width = 1200, height = 800)
-print(p)
-dev.off()
 
 ##================================================================================================
 #summary statistics
 library(tidyverse)
 # Calculate summary statistics for each measure by type
 summary_stats <- data_3or %>%
-  select(Type, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food, CML_ug_per_kcal_food, 
-         MG_ug_per_kcal_food, LF_ug_per_kcal_food, SF_ug_per_kcal_food, CML_plus_MG_g, CML_plus_MG_kcal, 
+  select(Type, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist, CML_ug_per_kcal_food, 
+         MG_ug_per_kcal_food, LF_ug_per_kcal_food, SF_ug_per_kcal_food, CML_plus_MG_g_moist, CML_plus_MG_kcal, 
          Combined_fluo_g, Combined_fluo_kcal, Total_AGE_Score_g, Total_AGE_Score_kcal) %>%
   group_by(Type) %>%
   summarise(across(everything(), list(min = ~min(., na.rm = TRUE),
@@ -467,11 +385,11 @@ View(data)
 
 #big mutate block to add necessary calculations as new columns
 data <- data %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-  mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
+  mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
   mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
 
 # ======= Figure 5C Order the dog foods by increasing total AGE score in ug per gram
@@ -484,15 +402,15 @@ data$DogFoodLabel2 <- factor(data$DogFoodLabel2, levels = data$DogFoodLabel2)
 
 # Create a long format for the AGE measures (has dogfood names)
 # data_long <- data %>%
- # select(DogFoodLabel, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food) %>%
- # pivot_longer(cols = c(CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food),
+ # select(DogFoodLabel, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist) %>%
+ # pivot_longer(cols = c(CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist),
       #         names_to = "AGE_Measure",
         #       values_to = "Value")
 
 # Create a long format for the AGE measures (no dogfood names)
 data_long <- data %>%
-  select(DogFoodLabel2, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food) %>%
-  pivot_longer(cols = c(CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food),
+  select(DogFoodLabel2, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist) %>%
+  pivot_longer(cols = c(CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist),
                names_to = "AGE_Measure",
                values_to = "Value")
 
@@ -509,10 +427,10 @@ p <- ggplot(data_long, aes(x = DogFoodLabel2, y = Value, fill = AGE_Measure)) +
         plot.title = element_text(hjust = 0.5, size = 20),
         legend.title = element_text(size = 20),
         legend.text = element_text(size = 20)) +
-  scale_fill_manual(values = c("CML_ug_per_g_food" = "red",
-                               "MG_ug_per_g_food" = "blue",
-                               "LF_AGE_ug_per_g_food" = "darkgreen",
-                               "SF_ug_per_g_food" = "darkgray"))
+  scale_fill_manual(values = c("CML_ug_per_g_food_moist" = "red",
+                               "MG_ug_per_g_food_moist" = "blue",
+                               "LF_AGE_ug_per_g_food_moist" = "darkgreen",
+                               "SF_ug_per_g_food_moist" = "darkgray"))
 p
 
 
@@ -536,11 +454,11 @@ data <- data %>%
 
 # Perform necessary calculations
 data <- data %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-  mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
+  mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
   mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
 
 # Order the dog foods by increasing total AGE score in ug per gram
@@ -552,8 +470,8 @@ data$DogFoodLabel <- factor(data$DogFoodLabel, levels = data$DogFoodLabel)
 
 # Create a long format for the AGE measures
 data_long <- data %>%
-  select(DogFoodLabel, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food) %>%
-  pivot_longer(cols = c(CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food),
+  select(DogFoodLabel, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist) %>%
+  pivot_longer(cols = c(CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist),
                names_to = "AGE_Measure",
                values_to = "Value")
 
@@ -570,10 +488,10 @@ p <- ggplot(data_long, aes(x = DogFoodLabel, y = Value, fill = AGE_Measure)) +
         plot.title = element_text(hjust = 0.5, size = 20),
         legend.title = element_text(size = 20),
         legend.text = element_text(size = 20)) +
-  scale_fill_manual(values = c("CML_ug_per_g_food" = "red",
-                               "MG_ug_per_g_food" = "blue",
-                               "LF_AGE_ug_per_g_food" = "darkgreen",
-                               "SF_ug_per_g_food" = "darkgray"))
+  scale_fill_manual(values = c("CML_ug_per_g_food_moist" = "red",
+                               "MG_ug_per_g_food_moist" = "blue",
+                               "LF_AGE_ug_per_g_food_moist" = "darkgreen",
+                               "SF_ug_per_g_food_moist" = "darkgray"))
 # Display the plot
 p
 
@@ -636,11 +554,11 @@ data <- data %>%
 
 # Big mutate block to add necessary calculations as new columns
 data <- data %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-  mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
+  mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
   mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
 
 # Order the dog foods by increasing total AGE score in ug per gram
@@ -652,8 +570,8 @@ data$DogFoodLabelFull <- factor(data$DogFoodLabelFull, levels = data$DogFoodLabe
 
 # Create a long format for the AGE measures
 data_long <- data %>%
-  select(DogFoodLabelFull, Type, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food) %>%
-  pivot_longer(cols = c(CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food),
+  select(DogFoodLabelFull, Type, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist) %>%
+  pivot_longer(cols = c(CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist),
                names_to = "AGE_Measure",
                values_to = "Value") %>%
   filter(!is.na(Value) & Value > 0)  # Remove NA or zero values
@@ -671,10 +589,10 @@ p <- ggplot(data_long, aes(x = DogFoodLabelFull, y = Value, fill = AGE_Measure,
         plot.title = element_text(hjust = 0.5, size = 20),
         legend.title = element_text(size = 20),
         legend.text = element_text(size = 20)) +
-  scale_fill_manual(values = c("CML_ug_per_g_food" = "red",
-                               "MG_ug_per_g_food" = "blue",
-                               "LF_AGE_ug_per_g_food" = "darkgreen",
-                               "SF_ug_per_g_food" = "darkgray"))
+  scale_fill_manual(values = c("CML_ug_per_g_food_moist" = "red",
+                               "MG_ug_per_g_food_moist" = "blue",
+                               "LF_AGE_ug_per_g_food_moist" = "darkgreen",
+                               "SF_ug_per_g_food_moist" = "darkgray"))
 
 # Convert ggplot to plotly object for interactivity
 p_interactive <- ggplotly(p, tooltip = "text")
@@ -685,7 +603,6 @@ p_interactive
 #this one above is good.
 
 #=============================now lets make canned and kibble separately
-
 # Load required libraries
 library(ggplot2)
 library(dplyr)
@@ -693,40 +610,36 @@ library(tidyr)
 library(plotly)
 library(htmlwidgets)  # For saving as HTML
 
-# Load data
-data <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3_super_high_cml_removed
-
-# Exclude the dog foods with the type "fresh"
-data <- data %>%
-  filter(Type != "Fresh")
+# Exclude the dog foods with the type "fresh" and any rows with NA in CML_ug_per_g_food_moist
+data <- data_moisture %>%
+  filter(Type != "Fresh") %>%
+  drop_na(CML_ug_per_g_food_moist)  # Drop rows with NA in CML measure
 
 # Concatenate Make, Description, Type, and ID for better labeling
 data <- data %>%
-  mutate(DogFoodLabelFull = paste(Make, Description,ID, sep = " - "))
+  mutate(DogFoodLabelFull = paste(Make, Description, ID, sep = " - "))
 
 # Big mutate block to add necessary calculations as new columns
 data <- data %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
-  mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-  mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
-  mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
-  mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
+  mutate(Total_AGE_Score_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
+  mutate(Total_AGE_Score_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist + LF_ug_per_kcal_food_moist + SF_ug_per_kcal_food_moist) %>%
+  mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
+  mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) %>%
+  mutate(Combined_fluo_g_moist = LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
+  mutate(Combined_fluo_kcal_moist = LF_ug_per_kcal_food_moist + SF_ug_per_kcal_food_moist)
 
 # Create function to generate a horizontal stacked bar plot and save it
 generate_plot <- function(filtered_data, file_name) {
   
-  # Order the dog foods by increasing total AGE score in ug per gram
+  # Order the filtered data by Total_AGE_Score_g_moist for correct plotting
   filtered_data <- filtered_data %>%
-    arrange(Total_AGE_Score_g)
-  
-  # Ensure the factor levels of DogFoodLabelFull are in the correct order
-  filtered_data$DogFoodLabelFull <- factor(filtered_data$DogFoodLabelFull, levels = filtered_data$DogFoodLabelFull)
+    arrange(Total_AGE_Score_g_moist) %>%
+    mutate(DogFoodLabelFull = factor(DogFoodLabelFull, levels = unique(DogFoodLabelFull)))  # Set factor levels in correct order
   
   # Create a long format for the AGE measures
   data_long <- filtered_data %>%
-    select(DogFoodLabelFull, Type, CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food) %>%
-    pivot_longer(cols = c(CML_ug_per_g_food, MG_ug_per_g_food, LF_AGE_ug_per_g_food, SF_ug_per_g_food),
+    select(DogFoodLabelFull, Type, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist) %>%
+    pivot_longer(cols = c(CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist),
                  names_to = "AGE_Measure",
                  values_to = "Value") %>%
     filter(!is.na(Value) & Value > 0)  # Remove NA or zero values
@@ -745,10 +658,10 @@ generate_plot <- function(filtered_data, file_name) {
           plot.title = element_text(hjust = 0.5, size = 20),
           legend.title = element_text(size = 20),
           legend.text = element_text(size = 20)) +
-    scale_fill_manual(values = c("CML_ug_per_g_food" = "red",
-                                 "MG_ug_per_g_food" = "blue",
-                                 "LF_AGE_ug_per_g_food" = "darkgreen",
-                                 "SF_ug_per_g_food" = "darkgray")) 
+    scale_fill_manual(values = c("CML_ug_per_g_food_moist" = "red",
+                                 "MG_ug_per_g_food_moist" = "blue",
+                                 "LF_AGE_ug_per_g_food_moist" = "darkgreen",
+                                 "SF_ug_per_g_food_moist" = "darkgray")) 
   
   # Convert ggplot to plotly object for interactivity
   p_interactive <- ggplotly(p, tooltip = "text")
@@ -765,6 +678,8 @@ kibble_data <- data %>% filter(Type == "Kibble")
 generate_plot(canned_data, "canned_dog_foods.html")
 generate_plot(kibble_data, "kibble_dog_foods.html")
 
+
+
 #====================== 8-26-24 Vick's question can we plot only CML as ranked bars: for Fig 5A (cml in ug per g) and B (cml kcal)
 #Version 1 for 8-26-24 is ug per gram food
 
@@ -776,11 +691,11 @@ data <- data %>%
   filter(Type != "Fresh")
 
 data <- data %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-  mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
+  mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
   mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
 
 data <- data %>%
@@ -788,15 +703,15 @@ data <- data %>%
 
 # Order the dog foods by increasing CML
 data <- data %>%
-  arrange(CML_ug_per_g_food)
+  arrange(CML_ug_per_g_food_moist)
 
 # Ensure the factor levels of DogFoodLabel are in the correct order
 data$DogFoodLabel2 <- factor(data$DogFoodLabel2, levels = data$DogFoodLabel2)
 
 # Create a long format for the AGE measures
 data_long <- data %>%
-  select(DogFoodLabel2, CML_ug_per_g_food) %>%
-  pivot_longer(cols = c(CML_ug_per_g_food),
+  select(DogFoodLabel2, CML_ug_per_g_food_moist) %>%
+  pivot_longer(cols = c(CML_ug_per_g_food_moist),
                names_to = "CML_AGE_Measure",
                values_to = "Value")
 
@@ -813,7 +728,7 @@ p <- ggplot(data_long, aes(x = DogFoodLabel2, y = Value, fill = CML_AGE_Measure)
         plot.title = element_text(hjust = 0.5, size = 20),
         legend.title = element_text(size = 20),
         legend.text = element_text(size = 20)) +
-  scale_fill_manual(values = c("CML_ug_per_g_food" = "red"))
+  scale_fill_manual(values = c("CML_ug_per_g_food_moist" = "red"))
 p
 
 #================================================
@@ -865,7 +780,7 @@ library(reshape2)
 # Load the data: data_3or
 
 # Select relevant columns for AGE measurements
-age_columns <- c('CML_ug_per_g_food', 'MG_ug_per_g_food', 'LF_AGE_ug_per_g_food', 'SF_ug_per_g_food','Type')
+age_columns <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 'SF_ug_per_g_food_moist','Type')
 
 ages_data <- data_3or[, age_columns, drop = FALSE]
 
@@ -888,7 +803,7 @@ data_3or_use <- data_3or[data_3or$Type != 'Fresh', ]
 shape_column <- ifelse(grepl('Canned', y), 'circle', 'square')
 
 # Select relevant columns for PCA
-features <- c('CML_ug_per_g_food', 'MG_ug_per_g_food', 'LF_AGE_ug_per_g_food', 'SF_ug_per_g_food', 'CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'LF_ug_per_kcal_food', 'SF_ug_per_kcal_food')
+features <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 'SF_ug_per_g_food_moist', 'CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'LF_ug_per_kcal_food', 'SF_ug_per_kcal_food')
 
 x <- data_3or_use[features]
 y <- data_3or_use$Type
@@ -966,7 +881,7 @@ data_3or_use <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3_super_high_cml_re
 data_3or_use <- data_3or_use[data_3or_use$Type != 'Fresh', ]
 
 # Select relevant columns for PCA
-features <- c('CML_ug_per_g_food', 'MG_ug_per_g_food', 'LF_AGE_ug_per_g_food', 'SF_ug_per_g_food')
+features <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 'SF_ug_per_g_food_moist')
 features2 <- c('CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'LF_ug_per_kcal_food', 'SF_ug_per_kcal_food')
 x <- data_3or_use[features]
 x2 <- data_3or_use[features2]
@@ -1054,7 +969,7 @@ data_3or_use <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3_super_high_cml_re
 data_3or_use <- data_3or_use[data_3or_use$Type != 'Fresh', ]
 
 # Select relevant columns for PCA
-features <- c('CML_ug_per_g_food', 'MG_ug_per_g_food', 'LF_AGE_ug_per_g_food', 'SF_ug_per_g_food')
+features <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 'SF_ug_per_g_food_moist')
 features2 <- c('CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'LF_ug_per_kcal_food', 'SF_ug_per_kcal_food')
 x <- data_3or_use[features]
 x2 <- data_3or_use[features2]
@@ -1147,7 +1062,7 @@ data_3or_use <- data_3or[data_3or$Type != 'Fresh', ]
 
 # Add a column for shape based on clusters (this will be updated after K-means clustering)
 # Select relevant columns for PCA
-features <- c('CML_ug_per_g_food', 'MG_ug_per_g_food', 'LF_AGE_ug_per_g_food', 'SF_ug_per_g_food',
+features <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 'SF_ug_per_g_food_moist',
               'CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'LF_ug_per_kcal_food', 'SF_ug_per_kcal_food')
 
 x <- data_3or_use[features]
@@ -1251,17 +1166,17 @@ data <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3_super_high_cml_removed
 data <- data[data$Type != 'Fresh', ]
 
 data <- data %>%
-     mutate(Total_AGE_Score_g = CML_ug_per_g_food + MG_ug_per_g_food + LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+     mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
      mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
-     mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
+     mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
      mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-     mutate(Combined_fluo_g= LF_AGE_ug_per_g_food + SF_ug_per_g_food) %>%
+     mutate(Combined_fluo_g= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
      mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
 
 # Ensure the relevant columns are numeric
-columns_to_convert <- c('CML_ug_per_g_food', 'MG_ug_per_g_food', 'SF_ug_per_g_food', 'LF_AGE_ug_per_g_food', 
+columns_to_convert <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'SF_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 
                         'CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'SF_ug_per_kcal_food', 'LF_ug_per_kcal_food', 
-                        'CML_plus_MG_g', 'CML_plus_MG_kcal', 'Combined_fluo_g', 'Combined_fluo_kcal', 
+                        'CML_plus_MG_g_moist', 'CML_plus_MG_kcal', 'Combined_fluo_g', 'Combined_fluo_kcal', 
                         'Total_AGE_Score_g', 'Total_AGE_Score_kcal', 'Percent_moisture', 
                         'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber', 'kcal/kg')
 
@@ -1297,9 +1212,9 @@ compute_correlations <- function(data, x, y) {
 }
 
 # List of AGE measurements and ingredients
-age_measurements <- c('CML_ug_per_g_food', 'MG_ug_per_g_food', 'SF_ug_per_g_food', 'LF_AGE_ug_per_g_food', 
+age_measurements <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'SF_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 
                       'CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'SF_ug_per_kcal_food', 'LF_ug_per_kcal_food', 
-                      'CML_plus_MG_g', 'CML_plus_MG_kcal', 'Combined_fluo_g', 'Combined_fluo_kcal', 
+                      'CML_plus_MG_g_moist', 'CML_plus_MG_kcal', 'Combined_fluo_g', 'Combined_fluo_kcal', 
                       'Total_AGE_Score_g', 'Total_AGE_Score_kcal')
 ingredients <- c('Percent_moisture', 'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber', 'kcal/kg')
 
@@ -1355,8 +1270,8 @@ library(tidyr)
 
 # Assuming your data is in a data frame called `data`
 # Filter out rows with NA values in the relevant measure columns
-measure_columns <- c("CML_ug_per_g_food", "MG_ug_per_g_food", "LF_AGE_ug_per_g_food",
-                     "SF_ug_per_g_food", "CML_ug_per_kcal_food", "MG_ug_per_kcal_food",
+measure_columns <- c("CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist",
+                     "SF_ug_per_g_food_moist", "CML_ug_per_kcal_food", "MG_ug_per_kcal_food",
                      "LF_ug_per_kcal_food", "SF_ug_per_kcal_food")
 
 # Remove rows with missing values in measure columns
@@ -1398,7 +1313,7 @@ library(dplyr)
 library(tidyr)
 
 # Define measure columns, split by units
-ug_per_g_measures <- c("CML_ug_per_g_food", "MG_ug_per_g_food", "LF_AGE_ug_per_g_food", "SF_ug_per_g_food")
+ug_per_g_measures <- c("CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist", "SF_ug_per_g_food_moist")
 ug_per_kcal_measures <- c("CML_ug_per_kcal_food", "MG_ug_per_kcal_food", "LF_ug_per_kcal_food", "SF_ug_per_kcal_food")
 
 # Helper function to create plot
@@ -1442,48 +1357,61 @@ create_plot(ug_per_kcal_measures, "dog_food_quartile_ug_per_kcal.html")
 
 #=====================quick view for moisture 10-31-24
 
+# Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(htmlwidgets)
+library(ggbeeswarm)
+library(ggrepel)
+
 # Define measure columns, split by units
-ug_per_g_measures_moist <- c("CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist", "SF_ug_per_g_food_moist")
+ug_per_g_measures_moist <- c("CML_ug_per_g_food_moist_moist", "MG_ug_per_g_food_moist_moist", "LF_AGE_ug_per_g_food_moist_moist", "SF_ug_per_g_food_moist_moist")
 ug_per_kcal_measures_moist <- c("CML_ug_per_kcal_food_moist", "MG_ug_per_kcal_food_moist", "LF_ug_per_kcal_food_moist", "SF_ug_per_kcal_food_moist")
 
-library(tidyverse)
+# Filter data to remove missing values
 data_filtered_moist <- data_moisture %>% drop_na(any_of(ug_per_g_measures_moist))
 
-# Helper function to create plot
+# Helper function to create plot with tertiles and mean points
 create_plot <- function(measures, filename) {
   # Prepare data for the selected measures
   data_long <- data_filtered_moist %>%
     pivot_longer(cols = all_of(measures), names_to = "Measure", values_to = "Value") %>%
     group_by(Type, Measure) %>%
-    mutate(Quartile = ntile(Value, 5)) %>%
+    mutate(Tertile = ntile(Value, 3)) %>%  # Use tertiles instead of quartiles
     ungroup() %>%
-    mutate(Quartile_Label = paste0("Q", Quartile)) # Create quartile label
+    mutate(Tertile_Label = paste0("T", Tertile)) # Create tertile label
   
-  # Create ggplot with jitter, transparency, and custom hover details
-  p <- ggplot(data_long, aes(x = Type, y = Value, 
-                             text = paste("ID:", ID, "<br>",
-                                          "Make:", Make, "<br>",
-                                          "Description:", Description, "<br>",
-                                          "Quartile:", Quartile_Label))) +
-    geom_beeswarm(aes(color = Type), size = 2, alpha = 0.7) + # Adds transparency and reduces overlap
+  # Calculate the mean for each measure and type for plotting
+  mean_values <- data_long %>%
+    group_by(Type, Measure) %>%
+    summarize(Mean_Value = mean(Value, na.rm = TRUE), .groups = 'drop')
+  
+  # Create ggplot with boxplots, tertile labels, mean point, and jitter
+  p <- ggplot(data_long, aes(x = Type, y = Value)) +
     geom_boxplot(width = 0.1, alpha = 0.5) +
-    scale_y_log10() +
+    geom_beeswarm(aes(color = Type), size = 2, alpha = 0.7) +
     facet_wrap(~ Measure, scales = "free_y") +
+    scale_y_log10() +
     labs(
-      title = paste("Log-Scaled Quartile Distribution for", filename),
+      title = paste("Log-Scaled Tertile Distribution for", filename),
       x = "Dog Food Type",
       y = "Value (Log Scale)"
     ) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    # Add mean point and nudge label right and up for each measure and type
+    geom_point(data = mean_values, aes(y = Mean_Value), size = 4, color = "red") +
+    geom_text(data = mean_values, aes(x = Type, y = Mean_Value, label = round(Mean_Value, 2)),
+              color = "red", size = 4, nudge_y = 0.01, nudge_x = 0.12)  # Adjust both y and x positions
   
   # Convert to interactive plot with Plotly, showing only custom hover text
-  interactive_plot <- ggplotly(p, tooltip = "text")
+  interactive_plot <- ggplotly(p, tooltip = "text") 
   
   # Save the interactive plot as an HTML file
-  htmlwidgets::saveWidget(interactive_plot, filename)
+  saveWidget(interactive_plot, filename)
 }
 
 # Create and save plots for each measure type
-create_plot(ug_per_g_measures_moist, "dog_food_quartile_ug_per_g_moist.html")
-create_plot(ug_per_kcal_measures_moist, "dog_food_quartile_ug_per_kcal.html")
+create_plot(ug_per_g_measures_moist, "dog_food_tertile_ug_per_g_moist.html")
+create_plot(ug_per_kcal_measures_moist, "dog_food_tertile_ug_per_kcal_moist.html")
