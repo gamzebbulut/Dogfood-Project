@@ -533,7 +533,7 @@ ggsave(filename = "total_AGE_score_by_dog_food.png", plot = p, width = 12, heigh
 # Print the plot
 print(p)
 
-##=========================================== 9-11-24 version================
+##=========================================== 11-06-24 version moist================
 ## this is still the stacked plot, but making it interactive high resolution and color coded.
 # Load required libraries
 library(ggplot2)
@@ -542,34 +542,35 @@ library(tidyr)
 library(plotly)
 
 # Load data
-data <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3_super_high_cml_removed
+data2 <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization
 
 # Exclude the dog foods with the type "fresh"
-data <- data %>%
-  filter(Type != "Fresh")
+data2 <- data2 %>%
+  filter(Type != "Fresh") %>%
+  drop_na(CML_ug_per_g_food_moist) 
 
 # Concatenate Make, Description, Type, and ID for better labeling
-data <- data %>%
+data2 <- data2 %>%
   mutate(DogFoodLabelFull = paste(Make, Description,ID, sep = " - "))
 
 # Big mutate block to add necessary calculations as new columns
-data <- data %>%
-  mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
-  mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
+data2 <- data2 %>%
+  mutate(Total_AGE_Score_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
+  mutate(Total_AGE_Score_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist + LF_ug_per_kcal_food_moist + SF_ug_per_kcal_food_moist) %>%
   mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
-  mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-  mutate(Combined_fluo_g= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
-  mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
+  mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) %>%
+  mutate(Combined_fluo_g_moist= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
+  mutate(Combined_fluo_kcal_moist= LF_ug_per_kcal_food_moist + SF_ug_per_kcal_food_moist)
 
 # Order the dog foods by increasing total AGE score in ug per gram
-data <- data %>%
-  arrange(Total_AGE_Score_g)
+data2 <- data2 %>%
+  arrange(Total_AGE_Score_g_moist)
 
 # Ensure the factor levels of DogFoodLabelFull are in the correct order
-data$DogFoodLabelFull <- factor(data$DogFoodLabelFull, levels = data$DogFoodLabelFull)
+data2$DogFoodLabelFull <- factor(data2$DogFoodLabelFull, levels = data2$DogFoodLabelFull)
 
 # Create a long format for the AGE measures
-data_long <- data %>%
+data_long <- data2 %>%
   select(DogFoodLabelFull, Type, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist) %>%
   pivot_longer(cols = c(CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist),
                names_to = "AGE_Measure",
@@ -677,6 +678,7 @@ kibble_data <- data %>% filter(Type == "Kibble")
 # Generate and save the plots as separate HTML files
 generate_plot(canned_data, "canned_dog_foods.html")
 generate_plot(kibble_data, "kibble_dog_foods.html")
+generate_plot(data, "All_dog_foods.html") #this did not work
 
 
 
