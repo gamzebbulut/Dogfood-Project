@@ -34,7 +34,11 @@ data_moisture <- data_moisture %>%
 
 data_moisture <- data_moisture %>%
   mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
-  mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) 
+  mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) %>%
+  mutate( )
+
+# Remove rows with any NA values in the relevant columns
+data_moisture <- data_moisture %>% drop_na(all_of(columns_to_convert))
 
 
 View(data_moisture)
@@ -168,13 +172,11 @@ View (kibble_lf)
 #need function here:
 #September 19 2024 update, make pearson --> spearman
 # Define the function get help from chat gpt # this is like "fat option 3" (puts labels to the right)
+# Revised Function 2
 scatter_plot_by_type_label_right <- function(data, x, y, z = NULL) {
-  
-  # Ensure the arguments x, y, and z are characters
   x <- as.character(substitute(x))
   y <- as.character(substitute(y))
   
-  # If z is specified, filter the data frame based on the z type
   if (!is.null(z)) {
     z <- as.character(substitute(z))
     filtered_data <- data[data$Type == z, ]
@@ -182,47 +184,57 @@ scatter_plot_by_type_label_right <- function(data, x, y, z = NULL) {
     filtered_data <- data
   }
   
-  #adding the number as n= something onto the plot
+  # Filter out NA values for x and y
+  filtered_data <- filtered_data[!is.na(filtered_data[[x]]) & !is.na(filtered_data[[y]]), ]
   n_count <- nrow(filtered_data)
-  # Calculate the correlation coefficient only for the type of food selected
-  # Calculate the Spearman correlation coefficient
-  cor_test <- cor.test(filtered_data[[x]], filtered_data[[y]], method = "spearman")
-  correlation <- cor_test$estimate
-  p_value <- cor_test$p.value
+  
+  # Calculate correlation only if there are enough observations
+  if (n_count > 2) {
+    cor_test <- cor.test(filtered_data[[x]], filtered_data[[y]], method = "spearman")
+    correlation <- cor_test$estimate
+    p_value <- cor_test$p.value
+  } else {
+    correlation <- NA
+    p_value <- NA
+  }
   
   # Create the scatter plot
   p <- ggplot(filtered_data, aes_string(x = x, y = y)) +
     geom_point(size = 3) +
-    labs(title = if (!is.null(z)) {
-      paste("Scatter Plot of", x, "vs", y, "for type", z)
-    } else {
-      paste("Scatter Plot of", x, "vs", y, "for all food types")
-    },
-    x = x,
-    y = y) +geom_smooth(method = "lm", col = "red", lty = 2) +
-    labs(subtitle = paste("Number of Dog Foods Tested: n =", n_count))+
-    annotate("text", x = Inf, y = Inf,  # Adjust x and y to position the text to the left
-             label = paste0("\nSpearman r =", round(correlation, 2), 
-                            "\np-value =", signif(p_value, 3)), 
-             hjust = 1.1, vjust = 0.8, size = 10, color = "blue") +
-    theme(axis.title.x = element_text(size = 22, face = "bold"),  # Bold and adjust font size of x-axis label
-          axis.title.y = element_text(size = 22, face = "bold"),  # Bold and adjust font size of y-axis label
-          axis.text.x = element_text(size = 16),   # Bold and adjust font size of x-axis tick labels
-          axis.text.y = element_text(size = 16))   # Bold and adjust font size of y-axis tick labels
+    labs(
+      title = if (!is.null(z)) {
+        paste("Scatter Plot of", x, "vs", y, "for type", z)
+      } else {
+        paste("Scatter Plot of", x, "vs", y, "for all food types")
+      },
+      x = x,
+      y = y
+    ) +
+    geom_smooth(method = "lm", col = "red", lty = 2) +
+    labs(subtitle = paste("Number of Dog Foods Tested: n =", n_count)) +
+    annotate(
+      "text", x = -Inf, y = Inf,
+      label = paste0("\nSpearman r =", round(correlation, 2),
+                     "\np-value =", signif(p_value, 3)),
+      hjust = 1.1, vjust = 0.8, size = 10, color = "blue"
+    ) +
+    theme(
+      axis.title.x = element_text(size = 22, face = "bold"),
+      axis.title.y = element_text(size = 22, face = "bold"),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16)
+    )
   
-  # Print the plot
   print(p)
 }
 
 #need function here:
 # Define the function (puts labels to the left) get help from chat gpt # this is like "fat option 3"
+# Revised Function 2
 scatter_plot_by_type_label_left <- function(data, x, y, z = NULL) {
-  
-  # Ensure the arguments x, y, and z are characters
   x <- as.character(substitute(x))
   y <- as.character(substitute(y))
   
-  # If z is specified, filter the data frame based on the z type
   if (!is.null(z)) {
     z <- as.character(substitute(z))
     filtered_data <- data[data$Type == z, ]
@@ -230,38 +242,49 @@ scatter_plot_by_type_label_left <- function(data, x, y, z = NULL) {
     filtered_data <- data
   }
   
-  #adding the number as n= something onto the plot
+  # Filter out NA values for x and y
+  filtered_data <- filtered_data[!is.na(filtered_data[[x]]) & !is.na(filtered_data[[y]]), ]
   n_count <- nrow(filtered_data)
-  # Calculate the correlation coefficient only for the type of food selected
-  # Calculate the Pearson correlation coefficient
-  cor_test <- cor.test(filtered_data[[x]], filtered_data[[y]], method = "spearman")
-  correlation <- cor_test$estimate
-  p_value <- cor_test$p.value
+  
+  # Calculate correlation only if there are enough observations
+  if (n_count > 2) {
+    cor_test <- cor.test(filtered_data[[x]], filtered_data[[y]], method = "spearman")
+    correlation <- cor_test$estimate
+    p_value <- cor_test$p.value
+  } else {
+    correlation <- NA
+    p_value <- NA
+  }
   
   # Create the scatter plot
   p <- ggplot(filtered_data, aes_string(x = x, y = y)) +
     geom_point(size = 3) +
-    labs(title = if (!is.null(z)) {
-      paste("Scatter Plot of", x, "vs", y, "for type", z)
-    } else {
-      paste("Scatter Plot of", x, "vs", y, "for all food types")
-    },
-    x = x,
-    y = y) +geom_smooth(method = "lm", col = "red", lty = 2) +
-    labs(subtitle = paste("Number of Dog Foods Tested: n =", n_count))+
-    annotate("text", x = -Inf, y = Inf,  # Adjust x and y to position the text to the left
-             label = paste0("\nSpearman r =", round(correlation, 2), 
-                            "\np-value =", signif(p_value, 3)), 
-             hjust = -0.1, vjust = 0.8, size = 10, color = "blue") +
-    theme(axis.title.x = element_text(size = 22, face = "bold"),  # Bold and adjust font size of x-axis label
-          axis.title.y = element_text(size = 22, face = "bold"),  # Bold and adjust font size of y-axis label
-          axis.text.x = element_text(size = 16),   # Bold and adjust font size of x-axis tick labels
-          axis.text.y = element_text(size = 16))   # Bold and adjust font size of y-axis tick labels
+    labs(
+      title = if (!is.null(z)) {
+        paste("Scatter Plot of", x, "vs", y, "for type", z)
+      } else {
+        paste("Scatter Plot of", x, "vs", y, "for all food types")
+      },
+      x = x,
+      y = y
+    ) +
+    geom_smooth(method = "lm", col = "red", lty = 2) +
+    labs(subtitle = paste("Number of Dog Foods Tested: n =", n_count)) +
+    annotate(
+      "text", x = -Inf, y = Inf,
+      label = paste0("\nSpearman r =", round(correlation, 2),
+                     "\np-value =", signif(p_value, 3)),
+      hjust = -0.1, vjust = 0.8, size = 10, color = "blue"
+    ) +
+    theme(
+      axis.title.x = element_text(size = 22, face = "bold"),
+      axis.title.y = element_text(size = 22, face = "bold"),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_text(size = 16)
+    )
   
-  # Print the plot
   print(p)
 }
-
 
 #make a new scatter plot to see AGE measure vs ingredients to find which ones are p value signif
 
@@ -344,10 +367,9 @@ scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "MG_ug
 #summary statistics
 library(tidyverse)
 # Calculate summary statistics for each measure by type
-summary_stats <- data_3or %>%
-  select(Type, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist, CML_ug_per_kcal_food, 
-         MG_ug_per_kcal_food, LF_ug_per_kcal_food, SF_ug_per_kcal_food, CML_plus_MG_g_moist, CML_plus_MG_kcal, 
-         Combined_fluo_g, Combined_fluo_kcal, Total_AGE_Score_g, Total_AGE_Score_kcal) %>%
+summary_stats <- data_moisture %>%
+  select(Type, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist, CML_ug_per_kcal_food_moist, 
+         MG_ug_per_kcal_food_moist, LF_ug_per_kcal_food_moist, SF_ug_per_kcal_food_moist, CML_plus_MG_g_moist, CML_plus_MG_kcal_moist) %>%
   group_by(Type) %>%
   summarise(across(everything(), list(min = ~min(., na.rm = TRUE),
                                       max = ~max(., na.rm = TRUE),
@@ -356,7 +378,7 @@ summary_stats <- data_3or %>%
                                       sd = ~sd(., na.rm = TRUE))))
 
 # Save the summary statistics as a CSV file
-write.csv(summary_stats, 'summary_statistics_by_type10-21-24.csv', row.names = FALSE)
+write.csv(summary_stats, 'summary_statistics_by_type11-07-24.csv', row.names = FALSE)
 View(summary_stats)
 
 ###======================FIGURE 5 ===================================================================
@@ -1162,38 +1184,29 @@ library(readxl)
 library(dplyr)
 
 # Load the dataset
-data <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3_super_high_cml_removed
+data <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization
 
 # Remove Fresh foods
 data <- data[data$Type != 'Fresh', ]
 
 data <- data %>%
-     mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
-     mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food + LF_ug_per_kcal_food + SF_ug_per_kcal_food) %>%
      mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
-     mutate(CML_plus_MG_kcal = CML_ug_per_kcal_food + MG_ug_per_kcal_food) %>%
-     mutate(Combined_fluo_g= LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
-     mutate(Combined_fluo_kcal= LF_ug_per_kcal_food + SF_ug_per_kcal_food)
+     mutate(Combined_g_moist= CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + SF_ug_per_g_food_moist) 
 
 # Ensure the relevant columns are numeric
 columns_to_convert <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'SF_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 
-                        'CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'SF_ug_per_kcal_food', 'LF_ug_per_kcal_food', 
-                        'CML_plus_MG_g_moist', 'CML_plus_MG_kcal', 'Combined_fluo_g', 'Combined_fluo_kcal', 
-                        'Total_AGE_Score_g', 'Total_AGE_Score_kcal', 'Percent_moisture', 
-                        'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber', 'kcal/kg')
+                        'CML_plus_MG_g_moist','Combined_g_moist',
+                       'Percent_moisture', 'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber')
 
 data[columns_to_convert] <- lapply(data[columns_to_convert], function(x) as.numeric(as.character(x)))
 
 # Remove rows with any NA values in the relevant columns
 data <- data %>% drop_na(all_of(columns_to_convert))
 
-# Define the function to compute correlations and p-values
+# Revised Function 1
 compute_correlations <- function(data, x, y) {
   data_x <- data[[x]]
   data_y <- data[[y]]
-  
-  print(paste("Variable1:", x, "Type:", class(data_x)))
-  print(paste("Variable2:", y, "Type:", class(data_y)))
   
   # Filter out NA values
   valid_indices <- !is.na(data_x) & !is.na(data_y)
@@ -1215,10 +1228,8 @@ compute_correlations <- function(data, x, y) {
 
 # List of AGE measurements and ingredients
 age_measurements <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'SF_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 
-                      'CML_ug_per_kcal_food', 'MG_ug_per_kcal_food', 'SF_ug_per_kcal_food', 'LF_ug_per_kcal_food', 
-                      'CML_plus_MG_g_moist', 'CML_plus_MG_kcal', 'Combined_fluo_g', 'Combined_fluo_kcal', 
-                      'Total_AGE_Score_g', 'Total_AGE_Score_kcal')
-ingredients <- c('Percent_moisture', 'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber', 'kcal/kg')
+                      'CML_plus_MG_g_moist', 'Combined_g_moist')
+ingredients <- c('Percent_moisture', 'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber')
 
 # Initialize an empty data frame to store the results
 results <- data.frame()
@@ -1259,11 +1270,11 @@ for (age_measure in age_measurements) {
 }
 
 # Save the results to a CSV file
-write.csv(results, 'correlations_results.csv', row.names = FALSE)
+write.csv(results, 'correlations_results11-07-24.csv', row.names = FALSE)
 
 # Print the results
 print(results)
-#this code was working, I need to find which library had drop_na
+
 
 #==========================================assigning quartiles================== 10-28-2024
 # Load necessary libraries
