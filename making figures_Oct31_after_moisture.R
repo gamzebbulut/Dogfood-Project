@@ -35,7 +35,7 @@ data_moisture <- data_moisture %>%
 data_moisture <- data_moisture %>%
   mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
   mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) %>%
-  mutate( )
+  mutate(Combined_g_moist= CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + SF_ug_per_g_food_moist) 
 
 # Remove rows with any NA values in the relevant columns
 data_moisture <- data_moisture %>% drop_na(all_of(columns_to_convert))
@@ -167,124 +167,7 @@ kibble_lf <- data_moisture %>%
   dplyr::select(LF_AGE_ug_per_g_food_moist)
 View (kibble_lf)
 
-#now re make all the plots for Fig 3, make R remember the function.
-
-#need function here:
-#September 19 2024 update, make pearson --> spearman
-# Define the function get help from chat gpt # this is like "fat option 3" (puts labels to the right)
-# Revised Function 2
-scatter_plot_by_type_label_right <- function(data, x, y, z = NULL) {
-  x <- as.character(substitute(x))
-  y <- as.character(substitute(y))
-  
-  if (!is.null(z)) {
-    z <- as.character(substitute(z))
-    filtered_data <- data[data$Type == z, ]
-  } else {
-    filtered_data <- data
-  }
-  
-  # Filter out NA values for x and y
-  filtered_data <- filtered_data[!is.na(filtered_data[[x]]) & !is.na(filtered_data[[y]]), ]
-  n_count <- nrow(filtered_data)
-  
-  # Calculate correlation only if there are enough observations
-  if (n_count > 2) {
-    cor_test <- cor.test(filtered_data[[x]], filtered_data[[y]], method = "spearman")
-    correlation <- cor_test$estimate
-    p_value <- cor_test$p.value
-  } else {
-    correlation <- NA
-    p_value <- NA
-  }
-  
-  # Create the scatter plot
-  p <- ggplot(filtered_data, aes_string(x = x, y = y)) +
-    geom_point(size = 3) +
-    labs(
-      title = if (!is.null(z)) {
-        paste("Scatter Plot of", x, "vs", y, "for type", z)
-      } else {
-        paste("Scatter Plot of", x, "vs", y, "for all food types")
-      },
-      x = x,
-      y = y
-    ) +
-    geom_smooth(method = "lm", col = "red", lty = 2) +
-    labs(subtitle = paste("Number of Dog Foods Tested: n =", n_count)) +
-    annotate(
-      "text", x = -Inf, y = Inf,
-      label = paste0("\nSpearman r =", round(correlation, 2),
-                     "\np-value =", signif(p_value, 3)),
-      hjust = 1.1, vjust = 0.8, size = 10, color = "blue"
-    ) +
-    theme(
-      axis.title.x = element_text(size = 22, face = "bold"),
-      axis.title.y = element_text(size = 22, face = "bold"),
-      axis.text.x = element_text(size = 16),
-      axis.text.y = element_text(size = 16)
-    )
-  
-  print(p)
-}
-
-#need function here:
-# Define the function (puts labels to the left) get help from chat gpt # this is like "fat option 3"
-# Revised Function 2
-scatter_plot_by_type_label_left <- function(data, x, y, z = NULL) {
-  x <- as.character(substitute(x))
-  y <- as.character(substitute(y))
-  
-  if (!is.null(z)) {
-    z <- as.character(substitute(z))
-    filtered_data <- data[data$Type == z, ]
-  } else {
-    filtered_data <- data
-  }
-  
-  # Filter out NA values for x and y
-  filtered_data <- filtered_data[!is.na(filtered_data[[x]]) & !is.na(filtered_data[[y]]), ]
-  n_count <- nrow(filtered_data)
-  
-  # Calculate correlation only if there are enough observations
-  if (n_count > 2) {
-    cor_test <- cor.test(filtered_data[[x]], filtered_data[[y]], method = "spearman")
-    correlation <- cor_test$estimate
-    p_value <- cor_test$p.value
-  } else {
-    correlation <- NA
-    p_value <- NA
-  }
-  
-  # Create the scatter plot
-  p <- ggplot(filtered_data, aes_string(x = x, y = y)) +
-    geom_point(size = 3) +
-    labs(
-      title = if (!is.null(z)) {
-        paste("Scatter Plot of", x, "vs", y, "for type", z)
-      } else {
-        paste("Scatter Plot of", x, "vs", y, "for all food types")
-      },
-      x = x,
-      y = y
-    ) +
-    geom_smooth(method = "lm", col = "red", lty = 2) +
-    labs(subtitle = paste("Number of Dog Foods Tested: n =", n_count)) +
-    annotate(
-      "text", x = -Inf, y = Inf,
-      label = paste0("\nSpearman r =", round(correlation, 2),
-                     "\np-value =", signif(p_value, 3)),
-      hjust = -0.1, vjust = 0.8, size = 10, color = "blue"
-    ) +
-    theme(
-      axis.title.x = element_text(size = 22, face = "bold"),
-      axis.title.y = element_text(size = 22, face = "bold"),
-      axis.text.x = element_text(size = 16),
-      axis.text.y = element_text(size = 16)
-    )
-  
-  print(p)
-}
+#now re make all the plots for Fig 3, 
 
 #make a new scatter plot to see AGE measure vs ingredients to find which ones are p value signif
 
@@ -292,61 +175,93 @@ scatter_plot_by_type_label_left <- function(data, x, y, z = NULL) {
 
 # here we will use moisture data set
 # CML
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_ug_per_g_food_moist","Canned") #0.198 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_ug_per_g_food_moist", "Canned") # 0.253 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_ug_per_g_food_moist", "Canned") #0.654 moist
 scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_ug_per_g_food_moist", "Canned") #0.717 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_ug_per_g_food_moist", "Canned") # 0.253 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_ug_per_g_food_moist","Canned") #0.198 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_ug_per_g_food_moist", "Canned") #0.654 moist
 
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_ug_per_g_food_moist","Kibble")  #0.493 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_ug_per_g_food_moist", "Kibble")  #0.437 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_ug_per_g_food_moist", "Kibble")  #0.91 moist
 scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_ug_per_g_food_moist", "Kibble") #signif #0.00694 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_ug_per_g_food_moist", "Kibble")  #0.437 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_ug_per_g_food_moist","Kibble")  #0.493 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_ug_per_g_food_moist", "Kibble")  #0.91 moist
 
 #MG
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "MG_ug_per_g_food_moist","Canned") #0.422 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"MG_ug_per_g_food_moist", "Canned") # signif 0.00018 moist******
-scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"MG_ug_per_g_food_moist", "Canned") # 0.0014 moist****
 scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"MG_ug_per_g_food_moist", "Canned") # 0.0451 moist ****
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"MG_ug_per_g_food_moist", "Canned") # signif 0.00018 moist******
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "MG_ug_per_g_food_moist","Canned") #0.422 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"MG_ug_per_g_food_moist", "Canned") # 0.0014 moist****
 
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "MG_ug_per_g_food_moist","Kibble")  #Not signif 0.717 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.517 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.839 moist
 scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.942 moist
-
-#CML plus MG=== 
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_plus_MG_g_moist","Canned")  # not signif 0.291 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_plus_MG_g_moist", "Canned") # not signif 0.578 moist
-scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"CML_plus_MG_g_moist", "Canned")  ## not signif 0.0597 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_plus_MG_g_moist", "Canned") ## 0.318 not signif moist
-
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_plus_MG_g_moist","Kibble")  #Not signif 0.441 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_plus_MG_g_moist", "Kibble")  #Not signif 0.332 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_plus_MG_g_moist", "Kibble") #Not signif 0.512 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_plus_MG_g_moist", "Kibble") # not signif 0.122 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.517 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "MG_ug_per_g_food_moist","Kibble")  #Not signif 0.717 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"MG_ug_per_g_food_moist", "Kibble")  #Not signif 0.839 moist
 
 #SF
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "SF_ug_per_g_food_moist","Canned")  ## 0.571 not sig moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"SF_ug_per_g_food_moist", "Canned") #Not signif 0.991 moist
-scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"SF_ug_per_g_food_moist", "Canned") #Not signif 0.438 moist
 scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"SF_ug_per_g_food_moist", "Canned") #signif 0.0196 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"SF_ug_per_g_food_moist", "Canned") #Not signif 0.991 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "SF_ug_per_g_food_moist","Canned")  ## 0.571 not sig moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"SF_ug_per_g_food_moist", "Canned") #Not signif 0.438 moist
 
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "SF_ug_per_g_food_moist","Kibble") #Not signif 0.743 m
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"SF_ug_per_g_food_moist", "Kibble")  #Not signif 0.154 m
-scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"SF_ug_per_g_food_moist", "Kibble") #Not signif 0.72 m
+
 scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"SF_ug_per_g_food_moist", "Kibble") #Not signif 0.789 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"SF_ug_per_g_food_moist", "Kibble")  #Not signif 0.154 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "SF_ug_per_g_food_moist","Kibble") #Not signif 0.743 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"SF_ug_per_g_food_moist", "Kibble") #Not signif 0.72 m
 
 #LF plots
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food_moist","Canned")   # 0.33 not signif m
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"LF_AGE_ug_per_g_food_moist", "Canned")  # ** 0.000166 m
-scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food_moist", "Canned") # ** 0.0197 m
 scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"LF_AGE_ug_per_g_food_moist", "Canned")  # ** 0.00485 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"LF_AGE_ug_per_g_food_moist", "Canned")  # ** 0.000166 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food_moist","Canned")   # 0.33 not signif m
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food_moist", "Canned") # ** 0.0197 m
 
-scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food_moist","Kibble") # not signif 0.605 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"LF_AGE_ug_per_g_food_moist", "Kibble") # not signif 0.0833 m
 scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"LF_AGE_ug_per_g_food_moist", "Kibble") # yes signif 0.0206 m
-scatter_plot_by_type_label_right(data_moisture,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food_moist", "Kibble") #not signif 0.784 m
-scatter_plot_by_type_label_right(data_moisture,"Percent_moisture" ,"LF_AGE_ug_per_g_food_moist", "Kibble") # not signif 0.0833 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "LF_AGE_ug_per_g_food_moist","Kibble") # not signif 0.605 m
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"LF_AGE_ug_per_g_food_moist", "Kibble") #not signif 0.784 m
 
+#CML plus MG=== 
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_plus_MG_g_moist", "Canned") ## 0.318 not signif moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_plus_MG_g_moist", "Canned") # not signif 0.578 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_plus_MG_g_moist","Canned")  # not signif 0.291 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_plus_MG_g_moist", "Canned")  ## not signif 0.0597 moist
 
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"CML_plus_MG_g_moist", "Kibble") # not signif 0.122 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"CML_plus_MG_g_moist", "Kibble")  #Not signif 0.332 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "CML_plus_MG_g_moist","Kibble")  #Not signif 0.441 moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"CML_plus_MG_g_moist", "Kibble") #Not signif 0.512 moist
+
+#new "combined" based on Dr Turner's paper draft 11-12-24
+
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"Combined_g_moist", "Canned") ## 0.169 non signif moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"Combined_g_moist", "Canned") # 0.77 non signif moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "Combined_g_moist","Canned")  # 0.995 non signif moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"Combined_g_moist", "Canned")  ## 0.758 non signif moist
+
+scatter_plot_by_type_label_left(data_moisture,"Percent_moisture" ,"Combined_g_moist", "Kibble") # 0.923 non signif moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_protein" ,"Combined_g_moist", "Kibble")  # 0.184 non signif moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_max_Crude_fat", "Combined_g_moist","Kibble")  #0.513 non signif moist
+scatter_plot_by_type_label_left(data_moisture,"Percent_Crude_fiber" ,"Combined_g_moist", "Kibble") #0.509 non signif moist
+
+# FDR correction for ingredient correlations
+# Load necessary libraries
+library(readxl)
+library(writexl)
+install.packages("writexl")
+
+# Load the data from the uploaded file
+file_path <- "correlations_results11-12-24_compiled_FDR.xlsx"
+data_fdr <- read_excel(file_path)
+
+# Display column names to confirm p-value column (e.g., "P_Value")
+print(names(data_fdr))
+
+# Assuming the p-value column is named "P_Value" (adjust if necessary)
+# Apply Benjamini-Hochberg (BH) correction for FDR
+data_fdr$FDR_Adjusted_P <- p.adjust(data_fdr$P_Value, method = "BH")
+
+# Save the updated data with FDR-adjusted p-values to a new file
+output_path <- "correlations_results_FDR_corrected.xlsx"
+write_xlsx(data_fdr, output_path)
 
 #Figure 2 related plots among AGE measures correlations.
 
@@ -361,6 +276,7 @@ scatter_plot_by_type_label_right(data_moisture,"CML_plus_MG_g_moist", "SF_ug_per
 
 scatter_plot_by_type_label_left(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Canned") #0.353
 scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Kibble") # signif 0.0233 m
+
 
 
 ##================================================================================================
@@ -1173,107 +1089,6 @@ print("CSV file 'Cluster_2_Canned_Foods.csv' saved successfully!")
 
 # Display the list of canned foods in Cluster 2
 print(cluster_2_canned)
-
-
-
-#====================================================================================
-# how about we make a ginormous table of all correlations
-
-# Load required libraries
-library(readxl)
-library(dplyr)
-
-# Load the dataset
-data <- ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization
-
-# Remove Fresh foods
-data <- data[data$Type != 'Fresh', ]
-
-data <- data %>%
-     mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
-     mutate(Combined_g_moist= CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + SF_ug_per_g_food_moist) 
-
-# Ensure the relevant columns are numeric
-columns_to_convert <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'SF_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 
-                        'CML_plus_MG_g_moist','Combined_g_moist',
-                       'Percent_moisture', 'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber')
-
-data[columns_to_convert] <- lapply(data[columns_to_convert], function(x) as.numeric(as.character(x)))
-
-# Remove rows with any NA values in the relevant columns
-data <- data %>% drop_na(all_of(columns_to_convert))
-
-# Revised Function 1
-compute_correlations <- function(data, x, y) {
-  data_x <- data[[x]]
-  data_y <- data[[y]]
-  
-  # Filter out NA values
-  valid_indices <- !is.na(data_x) & !is.na(data_y)
-  data_x <- data_x[valid_indices]
-  data_y <- data_y[valid_indices]
-  
-  # Check if there are enough observations
-  if (length(data_x) > 2 & length(data_y) > 2) {
-    cor_test <- cor.test(data_x, data_y, method = "spearman")
-    correlation <- cor_test$estimate
-    p_value <- cor_test$p.value
-  } else {
-    correlation <- NA
-    p_value <- NA
-  }
-  
-  return(data.frame(Variable1 = x, Variable2 = y, Correlation = correlation, P_Value = p_value))
-}
-
-# List of AGE measurements and ingredients
-age_measurements <- c('CML_ug_per_g_food_moist', 'MG_ug_per_g_food_moist', 'SF_ug_per_g_food_moist', 'LF_AGE_ug_per_g_food_moist', 
-                      'CML_plus_MG_g_moist', 'Combined_g_moist')
-ingredients <- c('Percent_moisture', 'Percent_max_Crude_protein', 'Percent_max_Crude_fat', 'Percent_Crude_fiber')
-
-# Initialize an empty data frame to store the results
-results <- data.frame()
-
-# Compute correlations for all food types
-for (age_measure in age_measurements) {
-  for (ingredient in ingredients) {
-    print(paste("Computing correlation for:", age_measure, "and", ingredient))
-    result <- compute_correlations(data, age_measure, ingredient)
-    result$Type <- 'All'
-    print(result)
-    results <- rbind(results, result)
-  }
-}
-
-# Compute correlations for canned food only
-data_canned <- data %>% filter(Type == 'Canned') %>% drop_na(all_of(columns_to_convert))
-for (age_measure in age_measurements) {
-  for (ingredient in ingredients) {
-    print(paste("Computing correlation for Canned:", age_measure, "and", ingredient))
-    result <- compute_correlations(data_canned, age_measure, ingredient)
-    result$Type <- 'Canned'
-    print(result)
-    results <- rbind(results, result)
-  }
-}
-
-# Compute correlations for kibble food only
-data_kibble <- data %>% filter(Type == 'Kibble') %>% drop_na(all_of(columns_to_convert))
-for (age_measure in age_measurements) {
-  for (ingredient in ingredients) {
-    print(paste("Computing correlation for Kibble:", age_measure, "and", ingredient))
-    result <- compute_correlations(data_kibble, age_measure, ingredient)
-    result$Type <- 'Kibble'
-    print(result)
-    results <- rbind(results, result)
-  }
-}
-
-# Save the results to a CSV file
-write.csv(results, 'correlations_results11-07-24.csv', row.names = FALSE)
-
-# Print the results
-print(results)
 
 
 #==========================================assigning quartiles================== 10-28-2024
