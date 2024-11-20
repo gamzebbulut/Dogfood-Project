@@ -9,10 +9,11 @@
 library(ggplot2)
 library(dplyr)
 library(readxl)
+library(tidyverse)
 
 # or click on the file to import
 
-ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization <- read_excel("attempt 9/ELISA and fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF edits_moisture normalization.xlsx")
+ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization <- read_excel("ELISA and fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF edits_moisture normalization.xlsx")
 View(ELISA_and_fluorescence_restruc_GB1_norm_kcal_3CML_NAed_VJF_edits_moisture_normalization)
 
 
@@ -37,76 +38,10 @@ data_moisture <- data_moisture %>%
   mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) %>%
   mutate(Combined_g_moist= CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + SF_ug_per_g_food_moist) 
 
-# Remove rows with any NA values in the relevant columns
-data_moisture <- data_moisture %>% drop_na(all_of(columns_to_convert))
-
-
 View(data_moisture)
-
-# 1a extract data for prism CML canned
-canned <- data_moisture %>%
-  filter(Type == "Canned") %>%
-  dplyr::select(CML_ug_per_kcal_food_moist)
-View (canned)
-
-# 2a extract data for prism CML kibble
-kibble <- data_moisture %>%
-  filter(Type== "Kibble") %>%
-  dplyr::select(CML_ug_per_kcal_food_moist)
-View (kibble)
-
-# 3a extract data for prism MG canned
-canned_mg <- data_moisture %>%
-  filter(Type== "Canned") %>%
-  dplyr::select(MG_ug_per_kcal_food_moist)
-View (canned_mg)
-
-# 4a extract data for prism MG kibble
-kibble_mg <- data_moisture %>%
-  filter(Type== "Kibble") %>%
-  dplyr::select(MG_ug_per_kcal_food_moist)
-View (kibble_mg)
-
-# 5a extract data for prism CML plus MG canned (this is the kcal version)
-canned_cml_plus_mg <- data_moisture %>%
-  filter(Type== "Canned") %>%
-  dplyr::select(CML_plus_MG_kcal_moist)
-View (canned_cml_plus_mg)
-
-# 6a extract data for prism CML plus MG kibble 
-kibble_cml_plus_mg <- data_moisture %>%
-  filter(Type== "Kibble") %>%
-  dplyr::select(CML_plus_MG_kcal_moist)
-View (kibble_cml_plus_mg)
-
-# 7a extract data for prism SF canned
-canned_sf <- data_moisture %>%
-  filter(Type== "Canned") %>%
-  dplyr::select(SF_ug_per_kcal_food_moist)
-View (canned_sf)
-
-# 8a extract data for prism SF kibble
-kibble_sf <- data_moisture %>%
-  filter(Type== "Kibble") %>%
-  dplyr::select(SF_ug_per_kcal_food_moist)
-View (kibble_sf)
-
-# 9a extract data for prism LF canned
-canned_lf <- data_moisture %>%
-  filter(Type== "Canned") %>%
-  dplyr::select(LF_ug_per_kcal_food_moist)
-View (canned_lf)
-
-# 10a extract data for prism LF kibble
-kibble_lf <- data_moisture %>%
-  filter(Type== "Kibble") %>%
-  dplyr::select(LF_ug_per_kcal_food_moist)
-View (kibble_lf)
 
 #Now start making same plots for ug per gram food
 #==============================
-#add a new column that calculates CML+ MG using ug per gram food
-
 # 1 extract data for prism CML canned in ug per gram
 canned <- data_moisture %>%
   filter(Type == "Canned") %>%
@@ -167,7 +102,167 @@ kibble_lf <- data_moisture %>%
   dplyr::select(LF_AGE_ug_per_g_food_moist)
 View (kibble_lf)
 
-#now re make all the plots for Fig 3, 
+#================================================================================
+
+# 1a extract data for prism CML canned (this is the kcal version)
+canned <- data_moisture %>%
+  filter(Type == "Canned") %>%
+  dplyr::select(CML_ug_per_kcal_food_moist)
+View (canned)
+
+# 2a extract data for prism CML kibble
+kibble <- data_moisture %>%
+  filter(Type== "Kibble") %>%
+  dplyr::select(CML_ug_per_kcal_food_moist)
+View (kibble)
+
+# 3a extract data for prism MG canned
+canned_mg <- data_moisture %>%
+  filter(Type== "Canned") %>%
+  dplyr::select(MG_ug_per_kcal_food_moist)
+View (canned_mg)
+
+# 4a extract data for prism MG kibble
+kibble_mg <- data_moisture %>%
+  filter(Type== "Kibble") %>%
+  dplyr::select(MG_ug_per_kcal_food_moist)
+View (kibble_mg)
+
+# 5a extract data for prism CML plus MG canned 
+canned_cml_plus_mg <- data_moisture %>%
+  filter(Type== "Canned") %>%
+  dplyr::select(CML_plus_MG_kcal_moist)
+View (canned_cml_plus_mg)
+
+# 6a extract data for prism CML plus MG kibble 
+kibble_cml_plus_mg <- data_moisture %>%
+  filter(Type== "Kibble") %>%
+  dplyr::select(CML_plus_MG_kcal_moist)
+View (kibble_cml_plus_mg)
+
+# 7a extract data for prism SF canned
+canned_sf <- data_moisture %>%
+  filter(Type== "Canned") %>%
+  dplyr::select(SF_ug_per_kcal_food_moist)
+View (canned_sf)
+
+# 8a extract data for prism SF kibble
+kibble_sf <- data_moisture %>%
+  filter(Type== "Kibble") %>%
+  dplyr::select(SF_ug_per_kcal_food_moist)
+View (kibble_sf)
+
+# 9a extract data for prism LF canned
+canned_lf <- data_moisture %>%
+  filter(Type== "Canned") %>%
+  dplyr::select(LF_ug_per_kcal_food_moist)
+View (canned_lf)
+
+# 10a extract data for prism LF kibble
+kibble_lf <- data_moisture %>%
+  filter(Type== "Kibble") %>%
+  dplyr::select(LF_ug_per_kcal_food_moist)
+View (kibble_lf)
+
+#====================== new idea ggstatsplot package
+# Load necessary libraries
+install.packages("patchwork") # For arranging plots in a grid
+
+# Load necessary libraries
+library(ggstatsplot)
+library(tidyverse)
+library(patchwork)
+
+# Define measure columns
+ug_per_g_measures_moist <- c("CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", 
+                             "CML_plus_MG_g_moist", "SF_ug_per_g_food_moist")
+ug_per_kcal_measures_moist <- c("CML_ug_per_kcal_food_moist", "MG_ug_per_kcal_food_moist", 
+                                "CML_plus_MG_kcal_moist", "SF_ug_per_kcal_food_moist")
+
+# Function to generate individual plots
+generate_plot <- function(data, measure, remove_title = FALSE) {
+  data_long <- data %>%
+    pivot_longer(cols = all_of(measure), names_to = "Measure", values_to = "Value") %>%
+    mutate(Type = as.factor(Type)) # Ensure Type is treated as a factor
+  
+  # Perform Kruskal-Wallis test to get the overall p-value
+  kruskal_result <- kruskal.test(Value ~ Type, data = data_long)
+  p_value <- signif(kruskal_result$p.value, 3) # Round p-value to 3 significant digits
+  
+  # Create a custom subtitle showing only the p-value
+  custom_subtitle <- paste("p-value:", p_value)
+  
+  # Generate plot
+  ggbetweenstats(
+    data = data_long,
+    x = Type,
+    y = Value,
+    type = "nonparametric",
+    pairwise.comparisons = TRUE, # Enable pairwise comparisons
+    pairwise.annotation = "p.value", # Annotate pairwise comparisons with p-values
+    pairwise.display = "significant", # Only show significant pairwise comparisons
+    outlier.tagging = TRUE,
+    mean.plotting = TRUE,
+    mean.color = "red",
+    mean.label.size = 12,
+    title = if (!remove_title) paste("Distribution of", measure, "by Type") else NULL,
+    xlab = NULL, # Remove x-axis label
+    ylab = measure,
+    violin.alpha = 0.8,
+    violin.linewidth = 3, # Thicker violin plot lines
+    boxplot.width = 0.5,
+    boxplot.linewidth = 3, # Thicker boxplot lines
+    jitter.size = 5,
+    jitter.alpha = 0.8,
+    ggtheme = theme_minimal() +
+      theme(
+        # Make text bold and readable
+        axis.title.x = element_blank(), # Suppress x-axis label
+        axis.title.y = element_text(size = 18, face = "bold"),
+        axis.text = element_text(size = 16, face = "bold"),
+        plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        plot.subtitle = element_text(size = 16, face = "bold", hjust = 0.5) # Customize subtitle font
+      ),
+    p.adjust.method = "BH", # Apply Benjamini-Hochberg correction
+    results.subtitle = FALSE # Suppress the default subtitle
+  ) + 
+    # Add custom subtitle with the overall p-value
+    labs(subtitle = custom_subtitle) + 
+    # Apply log2 transformation to the y-axis
+    scale_y_continuous(trans = "log2")
+}
+
+# Generate plots for ug_per_g_measures_moist
+plots_ug_per_g <- lapply(ug_per_g_measures_moist, function(measure) {
+  generate_plot(data_filtered_moist, measure, remove_title = TRUE) # Remove titles for top row
+})
+
+# Generate plots for ug_per_kcal_measures_moist
+plots_ug_per_kcal <- lapply(ug_per_kcal_measures_moist, function(measure) {
+  generate_plot(data_filtered_moist, measure, remove_title = TRUE)
+})
+
+# Combine all plots into a single grid with explicit spacing
+all_plots <- wrap_plots(plots_ug_per_g, ncol = 4) /  # First row of plots
+  plot_spacer() /                                   # Add spacing
+  wrap_plots(plots_ug_per_kcal, ncol = 4) +         # Second row of plots
+  plot_layout(heights = c(4, 0.5, 4))               # Adjust heights (spacer is 1/8th of plot rows)
+
+# Optionally add an overarching title
+all_plots <- all_plots + plot_annotation(
+  title = "Dog Food Measures: ug/g (Top) and ug/kcal (Bottom)",
+  theme = theme(plot.title = element_text(size = 20, face = "bold"))
+)
+
+# Save the grid to a file
+ggsave("grid_all_measures_log2_scale_with_balanced_spacing.png", all_plots, width = 16, height = 10)
+
+
+#====================================================================================
+
+#now re make all the plots for Fig 2 and 3, 
 
 #make a new scatter plot to see AGE measure vs ingredients to find which ones are p value signif
 
@@ -264,20 +359,54 @@ output_path <- "correlations_results_FDR_corrected.xlsx"
 write_xlsx(data_fdr, output_path)
 
 #Figure 2 related plots among AGE measures correlations.
+# here i can compare CML, MG, LF, SF, CML+MG, combined, 6*5/2=15 *2 canned and kibble= 30 comparisons
 
-scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Canned") # sign 0.00329 m
-scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Kibble") #not signif 0.653 m
+# CML versus others in canned
+scatter_plot_by_type_label_leftp(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Canned")
+scatter_plot_by_type_label_leftp(data_moisture,"CML_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Canned") # 
+scatter_plot_by_type_label_leftp(data_moisture,"CML_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist","Canned") # 
 
-scatter_plot_by_type_label_left(data_moisture,"MG_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Canned") # 0.126 not signif m
-scatter_plot_by_type_label_right(data_moisture,"MG_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Kibble") # 0.00018 sign m
+# MG versus others in canned etc
+scatter_plot_by_type_label_leftp(data_moisture,"MG_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Canned") # 
+scatter_plot_by_type_label_leftp(data_moisture,"MG_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist","Canned")
+scatter_plot_by_type_label_leftp(data_moisture,"SF_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist","Canned")
+scatter_plot_by_type_label_leftp(data_moisture,"SF_ug_per_g_food_moist", "CML_plus_MG_g_moist","Canned")
+scatter_plot_by_type_label_leftp(data_moisture,"LF_AGE_ug_per_g_food_moist", "CML_plus_MG_g_moist","Canned")
+scatter_plot_by_type_label_leftp(data_moisture,"LF_AGE_ug_per_g_food_moist", "Combined_g_moist","Canned")
 
-scatter_plot_by_type_label_left(data_moisture,"CML_plus_MG_g_moist", "SF_ug_per_g_food_moist","Canned") # 0.00436 m
-scatter_plot_by_type_label_right(data_moisture,"CML_plus_MG_g_moist", "SF_ug_per_g_food_moist","Kibble") # 0.004 sign m
+# CML versus others in kibble
+scatter_plot_by_type_label_leftp(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Kibble")
+scatter_plot_by_type_label_leftp(data_moisture,"CML_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Kibble") # 
+scatter_plot_by_type_label_leftp(data_moisture,"CML_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist","Kibble") # 
 
-scatter_plot_by_type_label_left(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Canned") #0.353
-scatter_plot_by_type_label_right(data_moisture,"CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist","Kibble") # signif 0.0233 m
+# MG versus others in canned etc
+scatter_plot_by_type_label_leftp(data_moisture,"MG_ug_per_g_food_moist", "SF_ug_per_g_food_moist","Kibble") #
+scatter_plot_by_type_label_leftp(data_moisture,"MG_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist","Kibble")
+scatter_plot_by_type_label_leftp(data_moisture,"SF_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist","Kibble")
+scatter_plot_by_type_label_leftp(data_moisture,"SF_ug_per_g_food_moist", "CML_plus_MG_g_moist","Kibble")
+scatter_plot_by_type_label_leftp(data_moisture,"LF_AGE_ug_per_g_food_moist", "CML_plus_MG_g_moist","Kibble")
+scatter_plot_by_type_label_leftp(data_moisture,"LF_AGE_ug_per_g_food_moist", "Combined_g_moist","Kibble")
 
+# FDR correction for ingredient correlations
+# Load necessary libraries
+library(readxl)
+library(writexl)
+install.packages("writexl")
 
+# Load the data from the uploaded file
+file_path <- "AGE_correlations_naive_p_values.xlsx"
+data_fdr_agecorr <- read_excel(file_path)
+
+# Display column names to confirm p-value column (e.g., "P_Value")
+print(names(data_fdr_agecorr))
+
+# Assuming the p-value column is named "P_Value" (adjust if necessary)
+# Apply Benjamini-Hochberg (BH) correction for FDR
+data_fdr_agecorr$FDR_Adjusted_P <- p.adjust(data_fdr_agecorr$P_Value, method = "BH")
+
+# Save the updated data with FDR-adjusted p-values to a new file
+output_path <- "AGE_correlations_results_FDR_corrected.xlsx"
+write_xlsx(data_fdr_agecorr, output_path)
 
 ##================================================================================================
 #summary statistics
@@ -294,8 +423,118 @@ summary_stats <- data_moisture %>%
                                       sd = ~sd(., na.rm = TRUE))))
 
 # Save the summary statistics as a CSV file
-write.csv(summary_stats, 'summary_statistics_by_type11-07-24.csv', row.names = FALSE)
+write.csv(summary_stats, 'summary_statistics_by_type11-19-24.csv', row.names = FALSE)
 View(summary_stats)
+
+
+# try a tSNE myself 11-19-24
+#=============================================================================================
+
+# Load necessary libraries
+install.packages("Rtsne")
+library(Rtsne)
+library(tidyverse)
+
+# Subset AGE measures (replace these with your actual AGE columns)
+age_measures_all <- c("CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", 
+                  "LF_AGE_ug_per_g_food_moist", "SF_ug_per_g_food_moist",
+                  "CML_ug_per_kcal_food_moist", "MG_ug_per_kcal_food_moist", 
+                  "LF_ug_per_kcal_food_moist", "SF_ug_per_kcal_food_moist")
+
+# Prepare the data for t-SNE
+# Ensure data only contains numeric AGE measures and remove rows with missing values
+tsne_data <- data_moisture %>%
+  select(all_of(age_measures_all), Type) %>% # Include Type for later coloring
+  drop_na() # Remove rows with missing values
+
+# Store the AGE measures and the Type labels separately
+age_values <- tsne_data %>% select(-Type) # AGE measures
+types <- tsne_data$Type # Type labels for coloring
+
+# Perform t-SNE
+set.seed(42) # For reproducibility
+tsne_result <- Rtsne(as.matrix(age_values), dims = 2, perplexity = 30, verbose = TRUE, max_iter = 500)
+
+# Combine t-SNE results with Type labels
+tsne_plot_data <- tsne_result$Y %>%
+  as.data.frame() %>%
+  rename(tSNE1 = V1, tSNE2 = V2) %>%
+  mutate(Type = types)
+
+# Visualize the t-SNE result
+ggplot(tsne_plot_data, aes(x = tSNE1, y = tSNE2, color = Type)) +
+  geom_point(size = 4, alpha = 0.8) +
+  labs(
+    title = "t-SNE of AGE Measures",
+    x = "t-SNE Dimension 1",
+    y = "t-SNE Dimension 2",
+    color = "Dog Food Type"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+#=================================================================
+# interactive version of the tSNE, use 4 measures.
+# Load necessary libraries
+library(Rtsne)
+library(tidyverse)
+library(plotly)
+
+# Subset AGE measures (replace these with your actual AGE columns)
+age_measures <- c("CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", 
+                  "LF_AGE_ug_per_g_food_moist", "SF_ug_per_g_food_moist")
+
+# Prepare the data for t-SNE
+tsne_data <- data_moisture %>%
+  select(all_of(age_measures), Type, ID, Make, Description) %>% # Include Type and Description for interactivity
+  drop_na() # Remove rows with missing values
+
+# Store the AGE measures and other metadata separately
+age_values <- tsne_data %>% select(-Type, -Description, -ID, -Make) # AGE measures
+types <- tsne_data$Type # Type labels
+descriptions <- tsne_data$Description # Description for interactivity
+IDs <- tsne_data$ID # Description for interactivity
+Makes <- tsne_data$Make # Description for interactivity
+
+# Perform t-SNE
+set.seed(42) # For reproducibility
+tsne_result <- Rtsne(as.matrix(age_values), dims = 2, perplexity = 30, verbose = TRUE, max_iter = 500)
+
+# Combine t-SNE results with metadata
+tsne_plot_data <- tsne_result$Y %>%
+  as.data.frame() %>%
+  rename(tSNE1 = V1, tSNE2 = V2) %>%
+  mutate(Type = types, Description = descriptions, ID= IDs, Make= Makes)
+
+# Create the base ggplot with ellipses
+base_plot <- ggplot(tsne_plot_data, aes(x = tSNE1, y = tSNE2, color = Type)) +
+  geom_point(aes(text = paste("ID:", ID , 
+                              "Make:", Make,
+                              "Description:", Description)), size = 4, alpha = 0.8) + # Add hover info
+  labs(
+    title = "t-SNE of AGE Measures with Ellipses",
+    x = "t-SNE Dimension 1",
+    y = "t-SNE Dimension 2",
+    color = "Dog Food Type"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+
+# Convert to interactive plot with plotly
+interactive_plot <- ggplotly(base_plot, tooltip = c("x", "y", "text"))
+
+# Save the interactive plot to an HTML file
+htmlwidgets::saveWidget(interactive_plot, "tsne_interactive_plot.html")
+
 
 ###======================FIGURE 5 ===================================================================
 # Load required libraries
