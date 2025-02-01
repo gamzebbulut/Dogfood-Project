@@ -117,23 +117,10 @@ ft <- ft %>%
 
 # View the Table
 ft
+#here open the ft table, copy to excel, tricky. then reformat by hand and also ask codepilot to make min max, median iqr 
 
-# Optionally Save to Word Document with flextable
-ft_flex <- flextable(reshaped_stats) %>%
-  set_header_labels(
-    Normalization = "Normalization",
-    Measure = "Measure",
-    Statistic = "Statistic",
-    Canned = "Canned",
-    Kibble = "Kibble"
-  ) %>%
-  theme_vanilla() %>%
-  autofit()
+# Save as CSV
+write_csv(data_filtered_moist_ss, "data_filtered_moist_ss.csv")
 
-doc <- read_docx() %>%
-  body_add_flextable(ft_flex)
-
-# Save the document
-print(doc, target = "summary_statistics_with_iqr.docx")
 
 #this table still needs a lot of reformating by hand.

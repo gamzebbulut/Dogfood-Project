@@ -141,3 +141,4 @@ plot_corr_remove_diag(canned_results_fig3_3$corr_matrix, canned_fdr_p_matrix_fig
 
 # need to manually save the plots from the plots pane.
 
+#why does it not make a table?

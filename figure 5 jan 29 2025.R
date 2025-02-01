@@ -10,23 +10,25 @@ data <- data %>%
 
 data <- data %>%
   mutate(Total_AGE_Score_g = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist + SF_ug_per_g_food_moist)
+data <- data %>%
+  mutate(Total_AGE_Score_kcal = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist + LF_ug_per_kcal_food_moist + SF_ug_per_kcal_food_moist)
 
 
 # Define custom colors
 age_colors <- c(
-  "CML_ug_per_g_food_moist" = "red",
-  "MG_ug_per_g_food_moist" = "blue",
-  "LF_AGE_ug_per_g_food_moist" = "darkgreen",
-  "SF_ug_per_g_food_moist" = "darkgray"
+  "CML_ug_per_kcal_food_moist" = "red",
+  "MG_ug_per_kcal_food_moist" = "gray",
+  "LF_ug_per_kcal_food_moist" = "darkgreen",
+  "SF_ug_per_kcal_food_moist" = "blue"
 )
 
 # Step 1: Original Stacked Plot
 data_long <- data %>%
-  arrange(Total_AGE_Score_g) %>%
+  arrange(Total_AGE_Score_kcal) %>%
   mutate(DogFoodLabel2 = factor(DogFoodLabel2, levels = DogFoodLabel2)) %>%
-  select(DogFoodLabel2, CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist) %>%
+  select(DogFoodLabel2, CML_ug_per_kcal_food_moist, MG_ug_per_kcal_food_moist, LF_ug_per_kcal_food_moist, SF_ug_per_kcal_food_moist) %>%
   pivot_longer(
-    cols = c(CML_ug_per_g_food_moist, MG_ug_per_g_food_moist, LF_AGE_ug_per_g_food_moist, SF_ug_per_g_food_moist),
+    cols = c(CML_ug_per_kcal_food_moist, MG_ug_per_kcal_food_moist, LF_ug_per_kcal_food_moist, SF_ug_per_kcal_food_moist),
     names_to = "AGE_Measure",
     values_to = "Value"
   )
@@ -46,11 +48,11 @@ stacked_plot <- ggplot(data_long, aes(x = DogFoodLabel2, y = Value, fill = AGE_M
 
 # Step 2: Red CML Plot
 data_cml <- data %>%
-  arrange(CML_ug_per_g_food_moist) %>%
+  arrange(CML_ug_per_kcal_food_moist) %>%
   mutate(DogFoodLabel2 = factor(DogFoodLabel2, levels = DogFoodLabel2))
 
-cml_plot <- ggplot(data_cml, aes(x = DogFoodLabel2, y = CML_ug_per_g_food_moist)) +
-  geom_bar(stat = "identity", fill = age_colors["CML_ug_per_g_food_moist"]) +
+cml_plot <- ggplot(data_cml, aes(x = DogFoodLabel2, y = CML_ug_per_kcal_food_moist)) +
+  geom_bar(stat = "identity", fill = age_colors["CML_ug_per_kcal_food_moist"]) +
   labs(title = "CML AGE Measure", x = "Dog Food (Type)", y = "CML (ug/g)") +
   theme_minimal() +
   theme(
@@ -61,16 +63,16 @@ cml_plot <- ggplot(data_cml, aes(x = DogFoodLabel2, y = CML_ug_per_g_food_moist)
 
 # Step 3: Reorder Remaining AGE Measures
 data_mg <- data_cml %>%
-  select(DogFoodLabel2, MG_ug_per_g_food_moist)
+  select(DogFoodLabel2, MG_ug_per_kcal_food_moist)
 
 data_sf <- data_cml %>%
-  select(DogFoodLabel2, SF_ug_per_g_food_moist)
+  select(DogFoodLabel2, SF_ug_per_kcal_food_moist)
 
 data_lf <- data_cml %>%
-  select(DogFoodLabel2, LF_AGE_ug_per_g_food_moist)
+  select(DogFoodLabel2, LF_ug_per_kcal_food_moist)
 
-mg_plot <- ggplot(data_mg, aes(x = DogFoodLabel2, y = MG_ug_per_g_food_moist)) +
-  geom_bar(stat = "identity", fill = age_colors["MG_ug_per_g_food_moist"]) +
+mg_plot <- ggplot(data_mg, aes(x = DogFoodLabel2, y = MG_ug_per_kcal_food_moist)) +
+  geom_bar(stat = "identity", fill = age_colors["MG_ug_per_kcal_food_moist"]) +
   labs(title = "MG AGE Measure", x = "Dog Food (Type)", y = "MG (ug/g)") +
   theme_minimal() +
   theme(
@@ -79,8 +81,8 @@ mg_plot <- ggplot(data_mg, aes(x = DogFoodLabel2, y = MG_ug_per_g_food_moist)) +
     plot.title = element_text(hjust = 0.5, size = 14)
   )
 
-sf_plot <- ggplot(data_sf, aes(x = DogFoodLabel2, y = SF_ug_per_g_food_moist)) +
-  geom_bar(stat = "identity", fill = age_colors["SF_ug_per_g_food_moist"]) +
+sf_plot <- ggplot(data_sf, aes(x = DogFoodLabel2, y = SF_ug_per_kcal_food_moist)) +
+  geom_bar(stat = "identity", fill = age_colors["SF_ug_per_kcal_food_moist"]) +
   labs(title = "SF AGE Measure", x = "Dog Food (Type)", y = "SF (ug/g)") +
   theme_minimal() +
   theme(
@@ -89,8 +91,8 @@ sf_plot <- ggplot(data_sf, aes(x = DogFoodLabel2, y = SF_ug_per_g_food_moist)) +
     plot.title = element_text(hjust = 0.5, size = 14)
   )
 
-lf_plot <- ggplot(data_lf, aes(x = DogFoodLabel2, y = LF_AGE_ug_per_g_food_moist)) +
-  geom_bar(stat = "identity", fill = age_colors["LF_AGE_ug_per_g_food_moist"]) +
+lf_plot <- ggplot(data_lf, aes(x = DogFoodLabel2, y = LF_ug_per_kcal_food_moist)) +
+  geom_bar(stat = "identity", fill = age_colors["LF_ug_per_kcal_food_moist"]) +
   labs(title = "LF AGE Measure", x = "Dog Food (Type)", y = "LF (ug/g)") +
   theme_minimal() +
   theme(
@@ -104,4 +106,4 @@ combined_plot <- stacked_plot / cml_plot / mg_plot / sf_plot / lf_plot +
   plot_layout(heights = c(2, 1, 1, 1, 1))
 
 # Save the Combined Plot
-ggsave("figure_6_combined_AGE_plots_with_colors.png", combined_plot, width = 16, height = 20)
+ggsave("figure_6_combined_AGE_plots_with_colorsJan31.png", combined_plot, width = 16, height = 20)

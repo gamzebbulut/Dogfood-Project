@@ -26,7 +26,10 @@ library(ggpubr)
 library(corrplot)
 
 
-# click on the file to import
+# import data
+
+Final_excel_sheet_for_manuscript_01_22_25 <- read_excel("Final excel sheet for manuscript_01-22-25.xlsx")
+View(Final_excel_sheet_for_manuscript_01_22_25)
 
 data_moisture <- Final_excel_sheet_for_manuscript_01_22_25
 
