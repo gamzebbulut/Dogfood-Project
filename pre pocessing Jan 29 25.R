@@ -1,4 +1,4 @@
-# (version on Jan 29 2025)
+# (version on Feb 21 2025)
 
 # This part only has the "PRE-PROCESSING STEPS"
 
@@ -6,6 +6,7 @@
 # 5 kcal values that were missing were added by hand, Dr Turner found them.
 # 3 super high CML value containing rows were removed by hand , 
 # in addition to these now we also have normalization to moisture/dryness 10-31-24
+# in addition now we have dryness corrected numbers for ingredients in guaranteed analysis. 2-21-25
 
 library(ggplot2)
 library(dplyr)
@@ -25,29 +26,25 @@ library(reshape2)
 library(ggpubr)
 library(corrplot)
 
+# Set working directory to Dog food data Attempt 13
 
 # import data
+data_Attempt13GB <- read_excel("Final excel sheet for manuscript_02-20-25_Attempt13GB.xlsx")
+View(data_Attempt13GB)
 
-Final_excel_sheet_for_manuscript_01_22_25 <- read_excel("Final excel sheet for manuscript_01-22-25.xlsx")
-View(Final_excel_sheet_for_manuscript_01_22_25)
-
-data_moisture <- Final_excel_sheet_for_manuscript_01_22_25
-
-str(data_moisture)
+str(data_Attempt13GB)
 
 # need some modification here: coerce the data type to be either numeric or factor or as character as needed.
-data_moisture<- data_moisture %>%
+data_Attempt13GB<- data_Attempt13GB %>%
   mutate(label = as.character(ID)) %>%
   mutate(Type.f = as.factor(Type)) %>%
-  mutate(CML_ug_per_g_food = as.numeric(CML_ug_per_g_food)) %>%
-  mutate(CML_ug_per_g_food_moist = as.numeric(CML_ug_per_g_food_moist)) %>%
   mutate(CML_ug_per_g_food = as.numeric(CML_ug_per_g_food)) %>%
   mutate(`kcal/kg` = as.numeric(`kcal/kg`)) %>%
   rename(kcal_per_kg = `kcal/kg`) %>%
   mutate(Science.f = as.factor(Science)) 
 
 # create new metrics
-data_moisture <- data_moisture %>%
+data_Attempt13GB <- data_Attempt13GB %>%
   mutate(CML_plus_MG_g = CML_ug_per_g_food + MG_ug_per_g_food) %>%
   mutate(CML_plus_MG_g_moist = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist) %>%
   mutate(CML_plus_MG_kcal_moist = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist) %>%
@@ -55,8 +52,8 @@ data_moisture <- data_moisture %>%
   mutate(Combined_g_moist= CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + SF_ug_per_g_food_moist) %>%
   mutate(Combined_kcal_moist= CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist + SF_ug_per_kcal_food_moist)
 
-View(data_moisture)
-str(data_moisture)
+View(data_Attempt13GB)
+str(data_Attempt13GB)
 
 #======================remove na
 
@@ -72,8 +69,8 @@ ug_per_kcal_measures_moist <- c("CML_ug_per_kcal_food_moist", "MG_ug_per_kcal_fo
                                 "CML_plus_MG_kcal_moist", "SF_ug_per_kcal_food_moist")
 
 # Filter data to remove missing values
-data_filtered_moist <- data_moisture %>% drop_na(any_of(ug_per_g_measures_dry_weight))
-data_filtered_moist <- data_moisture %>% drop_na(any_of(ug_per_g_measures_moist))
-data_filtered_moist <- data_moisture %>% drop_na(any_of(ug_per_kcal_measures_moist))
+data_filtered_13 <- data_Attempt13GB %>% drop_na(any_of(ug_per_g_measures_dry_weight))
+data_filtered_13 <- data_Attempt13GB %>% drop_na(any_of(ug_per_g_measures_moist))
+data_filtered_13 <- data_Attempt13GB %>% drop_na(any_of(ug_per_kcal_measures_moist))
 
-View(data_filtered_moist)
+View(data_filtered_13)

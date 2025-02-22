@@ -1,8 +1,9 @@
-## Figure 2 Jan 29 2025
+## Figure 2 Feb 21 2025
 
 #continue after running the "PRE PROCESSING CODE"
 
 # WORKING ON INGREDIENT CORRELATIONS figure here
+### Feb 21 2025: new goal is to use Dry weight AGE measures and dry weight corrected ingredient numbers
 
 # this piece of code makes the corr matrix for fig 2 and also the table 
 
@@ -81,17 +82,18 @@ plot_corr <- function(corr_matrix, fdr_p_matrix, title) {
 }
 
 
-# Example usage for Kibble
-age_columns <- c(
-  "CML_ug_per_g_food", "MG_ug_per_g_food", "CML_plus_MG_g", "SF_ug_per_g_food", "Combined_g", "LF_AGE_ug_per_g_food",
-  "CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", "CML_plus_MG_g_moist", "SF_ug_per_g_food_moist", 
-  "Combined_g_moist", "LF_AGE_ug_per_g_food_moist", "CML_ug_per_kcal_food_moist", "MG_ug_per_kcal_food_moist", 
-  "CML_plus_MG_kcal_moist", "SF_ug_per_kcal_food_moist", "Combined_kcal_moist", "LF_ug_per_kcal_food_moist"
-)
-ingredient_columns <- c("Percent_max_Crude_fat", "Percent_max_Crude_protein", "Percent_Crude_fiber", "Percent_moisture", "kcal_per_kg")
+# Define dry weight AGE columns only
+age_columns <- c("CML_ug_per_g_food", 
+                 "MG_ug_per_g_food", 
+                 "CML_plus_MG_g", 
+                 "SF_ug_per_g_food", 
+                 "Combined_g", 
+                 "LF_AGE_ug_per_g_food")
+
+ingredient_columns <- c("Dry_weight_protein", "Dry_weight_fat", "Dry_weight_fiber")
 
 # Filter data for Kibble
-data_kibble <- data_filtered_moist %>% filter(Type == "Kibble")
+data_kibble <- data_filtered_13 %>% filter(Type == "Kibble")
 
 # Compute correlations and FDR correction
 kibble_results <- compute_correlations_and_matrix(data_kibble, age_columns, ingredient_columns)
@@ -102,14 +104,14 @@ kibble_fdr_p_matrix <- kibble_results$fdr_p_matrix
 kibble_table <- kibble_results$results_table
 
 # Save the table to a CSV
-write.csv(kibble_table, "kibble_correlations.csv", row.names = FALSE)
+write.csv(kibble_table, "kibble_correlationsFeb212025.csv", row.names = FALSE)
 
 # Plot the correlation matrix
 plot_corr(kibble_corr_matrix, kibble_fdr_p_matrix, "Correlation Matrix for Kibble Food")
 
 #For canned
 # Filter data for CANNED
-data_canned <- data_filtered_moist %>% filter(Type == "Canned")
+data_canned <- data_filtered_13 %>% filter(Type == "Canned")
 
 # Compute correlations and FDR correction
 canned_results <- compute_correlations_and_matrix(data_canned, age_columns, ingredient_columns)
@@ -120,7 +122,7 @@ canned_fdr_p_matrix <- canned_results$fdr_p_matrix
 canned_table <- canned_results$results_table
 
 # Save the table to a CSV
-write.csv(canned_table, "canned_correlations.csv", row.names = FALSE)
+write.csv(canned_table, "canned_correlationsFeb212025.csv", row.names = FALSE)
 
 # Plot the correlation matrix
 plot_corr(canned_corr_matrix, canned_fdr_p_matrix, "Correlation Matrix for Canned Food")
