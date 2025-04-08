@@ -1,5 +1,6 @@
-# Figure 4 
+# Figure 3 
 # STARTING TO WORK ON among AGE measures correlations.
+# do pre processing first.
 # here i can compare CML, MG, LF, SF, 
 
 # 4 will be per 1 of the 3 normalization styles (dry weight or as fed or as fed kcal)
@@ -16,8 +17,9 @@ plot_corr_remove_diag <- function(corr_matrix, fdr_p_matrix, title) {
     p.mat = fdr_p_matrix,
     insig = "blank",       # Hide non-significant correlations
     sig.level = 0.05,      # Significance threshold
-    tl.cex = 0.8,          # Text label size
+    tl.cex = 1.3,          # Text label size
     cl.cex = 0.8,          # Color legend size
+    tl.col = "black",    # Text color
     title = title,
     mar = c(0, 0, 2, 0),   # Adjust margins
     addgrid.col = "gray",  # Add grid for structure
@@ -99,46 +101,103 @@ combine_and_apply_global_fdr <- function(...) {
 }
 
 # Define AGE measures
-age_columns_fig3_1 <- c("CML_ug_per_g_food", "MG_ug_per_g_food", "SF_ug_per_g_food", "LF_AGE_ug_per_g_food")
-age_columns_fig3_2 <- c("CML_ug_per_g_food_moist", "MG_ug_per_g_food_moist", "SF_ug_per_g_food_moist", "LF_AGE_ug_per_g_food_moist")
-age_columns_fig3_3 <- c("CML_ug_per_kcal_food_moist", "MG_ug_per_kcal_food_moist", "SF_ug_per_kcal_food_moist", "LF_ug_per_kcal_food_moist")
+
+library(dplyr)
+
+data_filtered_13 <- data_filtered_13 %>%
+  mutate(
+    CML_MG_dry = CML_ug_per_g_food + MG_ug_per_g_food,
+    Fluo_total_dry = SF_ug_per_g_food + LF_AGE_ug_per_g_food,
+    Total_AGE_dry = CML_ug_per_g_food + MG_ug_per_g_food + SF_ug_per_g_food + LF_AGE_ug_per_g_food,
+    
+    CML_MG_af = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist,
+    Fluo_total_af = SF_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist,
+    Total_AGE_af = CML_ug_per_g_food_moist + MG_ug_per_g_food_moist + SF_ug_per_g_food_moist + LF_AGE_ug_per_g_food_moist,
+    
+    CML_MG_kcal = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist,
+    Fluo_total_kcal = SF_ug_per_kcal_food_moist + LF_ug_per_kcal_food_moist,
+    Total_AGE_kcal = CML_ug_per_kcal_food_moist + MG_ug_per_kcal_food_moist + SF_ug_per_kcal_food_moist + LF_ug_per_kcal_food_moist
+    
+  )
+
+# Define expanded AGE column list for Dry Weight only 3-27-25
+
+age_columns_fig3_1 <- c(
+  "CML_ug_per_g_food",
+  "MG_ug_per_g_food",
+  "CML_MG_dry",                  # Move this here (3rd)
+  "SF_ug_per_g_food",           # Hydrophilic AGEs
+  "LF_AGE_ug_per_g_food",       # Hydrophobic AGEs
+  "Fluo_total_dry"
+)
+
 
 # Compute correlations for Kibble
 
-data_kibble_fig3 <- data_filtered_moist %>% filter(Type == "Kibble")
+data_kibble_fig3 <- data_filtered_13 %>% filter(Type == "Kibble")
 kibble_results_fig3_1 <- compute_correlations_and_matrix_fig3(data_kibble_fig3, age_columns_fig3_1)
-kibble_results_fig3_2 <- compute_correlations_and_matrix_fig3(data_kibble_fig3, age_columns_fig3_2)
-kibble_results_fig3_3 <- compute_correlations_and_matrix_fig3(data_kibble_fig3, age_columns_fig3_3)
+#kibble_results_fig3_2 <- compute_correlations_and_matrix_fig3(data_kibble_fig3, age_columns_fig3_2)
+#kibble_results_fig3_3 <- compute_correlations_and_matrix_fig3(data_kibble_fig3, age_columns_fig3_3)
 
 # Compute correlations for Canned
-data_canned_fig3 <- data_filtered_moist %>% filter(Type == "Canned")
+data_canned_fig3 <- data_filtered_13 %>% filter(Type == "Canned")
 canned_results_fig3_1 <- compute_correlations_and_matrix_fig3(data_canned_fig3, age_columns_fig3_1)
-canned_results_fig3_2 <- compute_correlations_and_matrix_fig3(data_canned_fig3, age_columns_fig3_2)
-canned_results_fig3_3 <- compute_correlations_and_matrix_fig3(data_canned_fig3, age_columns_fig3_3)
+#canned_results_fig3_2 <- compute_correlations_and_matrix_fig3(data_canned_fig3, age_columns_fig3_2)
+#canned_results_fig3_3 <- compute_correlations_and_matrix_fig3(data_canned_fig3, age_columns_fig3_3)
 
 # Apply global FDR correction
 adjusted_p_matrices <- combine_and_apply_global_fdr(
-  kibble_results_fig3_1$p_matrix, kibble_results_fig3_2$p_matrix, kibble_results_fig3_3$p_matrix,
-  canned_results_fig3_1$p_matrix, canned_results_fig3_2$p_matrix, canned_results_fig3_3$p_matrix
-)
+  kibble_results_fig3_1$p_matrix, 
+  canned_results_fig3_1$p_matrix)
 
 # Update matrices with globally adjusted p-values
 kibble_fdr_p_matrix_fig3_1 <- adjusted_p_matrices[[1]]
-kibble_fdr_p_matrix_fig3_2 <- adjusted_p_matrices[[2]]
-kibble_fdr_p_matrix_fig3_3 <- adjusted_p_matrices[[3]]
-canned_fdr_p_matrix_fig3_1 <- adjusted_p_matrices[[4]]
-canned_fdr_p_matrix_fig3_2 <- adjusted_p_matrices[[5]]
-canned_fdr_p_matrix_fig3_3 <- adjusted_p_matrices[[6]]
+#kibble_fdr_p_matrix_fig3_2 <- adjusted_p_matrices[[2]]
+#kibble_fdr_p_matrix_fig3_3 <- adjusted_p_matrices[[3]]
+canned_fdr_p_matrix_fig3_1 <- adjusted_p_matrices[[2]]
+#canned_fdr_p_matrix_fig3_2 <- adjusted_p_matrices[[5]]
+#canned_fdr_p_matrix_fig3_3 <- adjusted_p_matrices[[6]]
+
+row_labels <- c(
+  "CML",
+  "MG",
+  "CML+MG",
+  "Hydrophilic\nAGEs",
+  "Hydrophobic\nAGEs",
+  "Hydrophilic +\nHydrophobic AGEs"  # Manual wrap
+)
+col_labels <- row_labels
+
+
+rownames(kibble_results_fig3_1$corr_matrix) <- row_labels
+colnames(kibble_results_fig3_1$corr_matrix) <- col_labels
+rownames(kibble_fdr_p_matrix_fig3_1) <- row_labels
+colnames(kibble_fdr_p_matrix_fig3_1) <- col_labels
+
+# Rename for Canned matrix
+rownames(canned_results_fig3_1$corr_matrix) <- row_labels
+colnames(canned_results_fig3_1$corr_matrix) <- col_labels
+rownames(canned_fdr_p_matrix_fig3_1) <- row_labels
+colnames(canned_fdr_p_matrix_fig3_1) <- col_labels
+
 
 # Re-Plot with global FDR-adjusted p-values
 plot_corr_remove_diag(kibble_results_fig3_1$corr_matrix, kibble_fdr_p_matrix_fig3_1, "Kibble (Dry Weight)")
-plot_corr_remove_diag(kibble_results_fig3_2$corr_matrix, kibble_fdr_p_matrix_fig3_2, "Kibble (As Fed ug)")
-plot_corr_remove_diag(kibble_results_fig3_3$corr_matrix, kibble_fdr_p_matrix_fig3_3, "Kibble (As Fed kcal)")
+#plot_corr_remove_diag(kibble_results_fig3_2$corr_matrix, kibble_fdr_p_matrix_fig3_2, "Kibble (As Fed ug)")
+#plot_corr_remove_diag(kibble_results_fig3_3$corr_matrix, kibble_fdr_p_matrix_fig3_3, "Kibble (As Fed kcal)")
 
 plot_corr_remove_diag(canned_results_fig3_1$corr_matrix, canned_fdr_p_matrix_fig3_1, "Canned (Dry Weight)")
-plot_corr_remove_diag(canned_results_fig3_2$corr_matrix, canned_fdr_p_matrix_fig3_2, "Canned (As Fed ug)")
-plot_corr_remove_diag(canned_results_fig3_3$corr_matrix, canned_fdr_p_matrix_fig3_3, "Canned (As Fed kcal)")
+#plot_corr_remove_diag(canned_results_fig3_2$corr_matrix, canned_fdr_p_matrix_fig3_2, "Canned (As Fed ug)")
+#plot_corr_remove_diag(canned_results_fig3_3$corr_matrix, canned_fdr_p_matrix_fig3_3, "Canned (As Fed kcal)")
 
 # need to manually save the plots from the plots pane.
 
 #why does it not make a table?
+
+# View correlation table
+kibble_results_fig3_1$results_table
+canned_results_fig3_1$results_table
+
+# Export to CSV (optional)
+write.csv(kibble_results_fig3_1$results_table, "kibble_corr_table.csv", row.names = FALSE)
+write.csv(canned_results_fig3_1$results_table, "canned_corr_table.csv", row.names = FALSE)
