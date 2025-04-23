@@ -74,7 +74,7 @@ create_age_plot <- function(df, value_label, file_name) {
     geom_boxplot(width = 0.2, position = position_dodge(width = 0.75), linewidth = 1.2) +
     geom_jitter(width = 0.1, alpha = 0.5, size = 2) +
     scale_y_continuous(trans = "log2",
-                       breaks = c(2, 8, 32, 128, 512, 2048)) +
+                       breaks = c(2, 8, 32, 128, 512, 2048, 4096, 8192)) +
     scale_x_discrete(labels = labels) +
     scale_fill_manual(values = c("Canned" = "#F8766D", "Kibble" = "#00BFC4"),
                       name = "Food Type") +

@@ -55,7 +55,7 @@ create_combined_plot <- function(df, label, filename) {
     geom_violin(alpha = 0.6, linewidth = 1.2, trim = FALSE) +
     geom_boxplot(width = 0.2, position = position_dodge(width = 0.75), linewidth = 1.2) +
     geom_jitter(width = 0.1, alpha = 0.5, size = 2) +
-    scale_y_continuous(trans = "log2", breaks = c(2, 8, 32, 128, 512, 2048)) +
+    scale_y_continuous(trans = "log2", breaks = c(2, 8, 32, 128, 512, 1024, 2048 , 4096, 8192, 16384, 32768 )) +
     scale_x_discrete(labels = labels) +
     scale_fill_manual(values = c("Canned" = "#F8766D", "Kibble" = "#00BFC4"), name = "Food Type") +
     labs(x = NULL, y = label) +
@@ -78,7 +78,7 @@ rowA <- data %>%
                               "Hydrophobic AGEs - Canned", "Hydrophobic AGEs - Kibble"))
   )
 
-create_combined_plot(rowA, "Dry Matter (µg/g)", "Figure2_RowA_Combined_Dry.tiff")
+create_combined_plot(rowA, "Dry Matter (µg/g)", "Figure2_RowA_Combined_Dry_april23.tiff")
 
 # Row B: Moist (ug/g)
 rowB <- data %>%
@@ -94,7 +94,7 @@ rowB <- data %>%
                               "Hydrophobic AGEs - Canned", "Hydrophobic AGEs - Kibble"))
   )
 
-create_combined_plot(rowB, "As Fed (µg/g)", "Figure2_RowB_Combined_Moist.tiff")
+create_combined_plot(rowB, "As Fed (µg/g)", "Figure2_RowB_Combined_Moist_April23.tiff")
 
 # Row C: Moist (ug/kcal)
 rowC <- data %>%
@@ -110,7 +110,7 @@ rowC <- data %>%
                               "Hydrophobic AGEs - Canned", "Hydrophobic AGEs - Kibble"))
   )
 
-create_combined_plot(rowC, "As Fed (µg/kcal)", "Figure2_RowC_Combined_Kcal.tiff")
+create_combined_plot(rowC, "As Fed (µg/kcal)", "Figure2_RowC_Combined_Kcal_April23.tiff")
 
 # === Stats ===
 rowA$Measurement <- "Dry Matter (µg/g)"
