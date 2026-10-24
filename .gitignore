@@ -1,0 +1,10 @@
+.DS_Store
+.Rhistory
+.RData
+.Rproj.user/
+*/output/
+data/
+*.xlsx
+*.tif
+*.tiff
+*.ai
