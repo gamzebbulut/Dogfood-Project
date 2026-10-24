@@ -36,7 +36,7 @@ R 4.4 with readxl, dplyr, tidyr, ggplot2, rstatix, corrplot, patchwork. Python 3
 
 ## History
 
-- Tag **`R1-submission`** — the code as it was when the R1 manuscript was submitted.
+- Commit **`3f2e802`** (23 Apr 2025) — the code as it was when the R1 manuscript was submitted.
 - `legacy/` — those R1-era scripts, kept for reference (file names do not always match manuscript figure numbers: e.g. `Fig 4 making among ages corr matrix and tables.R` made Figure 3 and `figure_6_combined_AGE_plots_final*.R` made Figure 7).
 - R2 changes (Oct 2026): reviewer-requested relabelling (wet/dry; dry matter, as-fed, caloric basis µg/kcal ME; Composite AGE Index), correlation coefficients shown in every cell, multiple-testing families limited to the comparisons shown, and Figure 2 restricted to the same 56 + 44 foods as the other figures.
 - Public-release edits: co-author names in code comments replaced by roles; the internal note in the Table 3 Word output disabled.
